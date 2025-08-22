@@ -1,16 +1,9 @@
-"""valley2.py
-~~~~~~~~~~~~~
+"""
+valley
+~~~~~~
 
 Plots a function of two variables to minimize.  The function is a
-fairly generic valley function.
-
-Note that this is a duplicate of valley.py, but omits labels on the
-axis.  It's bad practice to duplicate in this way, but I had
-considerable trouble getting matplotlib to update a graph in the way I
-needed (adding or removing labels), so finally fell back on this as a
-kludge solution.
-
-"""
+fairly generic valley function."""
 
 #### Libraries
 # Third party libraries
@@ -30,8 +23,8 @@ Z = X**2 + Y**2
 
 colortuple = ('w', 'b')
 colors = numpy.empty(X.shape, dtype=str)
-for x in xrange(len(X)):
-    for y in xrange(len(Y)):
+for x in range(len(X)):
+    for y in range(len(Y)):
         colors[x, y] = colortuple[(x + y) % 2]
 
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, facecolors=colors,
@@ -44,5 +37,7 @@ ax.w_xaxis.set_major_locator(LinearLocator(3))
 ax.w_yaxis.set_major_locator(LinearLocator(3))
 ax.w_zaxis.set_major_locator(LinearLocator(3))
 ax.text(1.79, 0, 1.62, "$C$", fontsize=20)
+ax.text(0.05, -1.8, 0, "$v_1$", fontsize=20)
+ax.text(1.5, -0.25, 0, "$v_2$", fontsize=20)
 
 plt.show()
