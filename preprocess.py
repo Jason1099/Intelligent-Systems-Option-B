@@ -22,7 +22,7 @@ class image_preprocessor:
 
         if self.binarize:
             # Binarize the image
-            pass
+            _, img = cv2.threshold(img, 175, 255, cv2.THRESH_BINARY_INV)
         
         print(f"Image preprocessed: {self.size}, Binarize: {self.binarize}")
         return img
