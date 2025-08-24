@@ -6,7 +6,7 @@ class image_preprocessor:
         self.size = size
         self.binarize = binarize
         self.image_path = image_path
-        self.image = self.preprocess()
+        # self.image = self.preprocess()
 
     def preprocess(self):
         # Read the image
@@ -18,7 +18,7 @@ class image_preprocessor:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Resize the image:
-        img = cv2.resize(img, self.size)
+        # img = cv2.resize(img, self.size)
 
         if self.binarize:
             # Binarize the image
@@ -27,6 +27,6 @@ class image_preprocessor:
         print(f"Image preprocessed: {self.size}, Binarize: {self.binarize}")
         return img
     
-    def show_image(self):
-        cv2.imshow('Preprocessed Image', self.image)
+    def show_image(self, image):
+        cv2.imshow('Preprocessed Image', image)
         cv2.waitKey(0)
