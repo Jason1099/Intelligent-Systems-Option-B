@@ -28,3 +28,4 @@ _, debug_binary = cv2.threshold(pre, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_
 cv2.imwrite(os.path.join(out_dir, "debug_binary.png"), debug_binary)
 
 print(f"Saved {len(crops)} crops and debug images to: {out_dir}")
+
