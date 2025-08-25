@@ -1,0 +1,15 @@
+Task 1: Image Preprocessing
+
+- Reads Image using OpenCV
+- Converts Image to Grayscale using cv2.cvtColor
+- Returns the processed Image
+
+Task 2: Image Segmentation (Still in progress, currently in beta stage)
+
+The isolating of individual digits is currently buggy. Digit extraction works but the extracted image are not the expected results. 
+This may be a result of incorrect cropping or wrong centering/wrong alignment on boxes.
+What we have currently implemented is, 
+
+- Used otsu binarization and connected components
+- Filtered the components based on the area and aspect ratio
+- Cropped the extracted images with padding, having them centered and resizing
