@@ -1,8 +1,3 @@
-/* =========================================
-   Handwritten & Number Recognition – Styles
-   (lean + indented to match the mock)
-   ========================================= */
-
 :root {
   --outer-bg:#4ec3ff; /* light blue background */
   --board-bg:#073f92; /* deep blue board */
@@ -32,7 +27,7 @@ body {
   background: var(--outer-bg);
 }
 
-/* keep your simple nav/footer, but unobtrusive */
+/* nav/footer */
 nav {
   display: flex;
   align-items: center;
@@ -76,7 +71,7 @@ footer {
   font-size: 0.95rem;
 }
 
-/* show only the active page (your JS toggles .active) */
+/* show only the active page */
 .content {
   display: none;
 }
@@ -223,7 +218,7 @@ select {
 .viz canvas {
   width: 100%;
   height: 200px;
-  background: #e9e9e9;   /* inner light area like the mock */
+  background: #e9e9e9; /* inner light area like the mock */
   border-radius: 10px;
 }
 
