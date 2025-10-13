@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 class image_segmentation:
-    def __init__(self, min_area_ratio=0.2, max_ar=2.5, crop_size=28, margin=2, center=True):
+    def __init__(self, min_area_ratio=0.15, max_ar=3, crop_size=28, margin=3, center=True):
         self.min_area_ratio = min_area_ratio
         self.max_ar = max_ar
         self.crop_size = crop_size
@@ -28,6 +28,12 @@ class image_segmentation:
             gray = gray.astype(np.uint8)
         
         _, bw = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+        bw = cv2.medianBlur(bw, 3)
+
+        k = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 3))
+        bw = cv2.morphologyEx(bw, cv2.MORPH_CLOSE, k, iterations=1)
+
         return bw
     
     def _filter_components(self, stats, num_labels):
@@ -63,7 +69,7 @@ class image_segmentation:
             x0 = max(0, x - self.margin)
             y0 = max(0, y - self.margin)
             x1 = min(bw.shape[1], x + w + self.margin)
-            y1 = min(bw.shape[0], x + h + self.margin)
+            y1 = min(bw.shape[0], y + h + self.margin)
             digit = bw[y0:y1, x0:x1]
             
             H, W = digit.shape
