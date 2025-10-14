@@ -42,13 +42,84 @@
               <button id="predictBtn" class="btn" type="button">Predict</button>
             </div>
 
-            <!-- Middle: preview -->
+      <!-- Middle: preview -->
             <div id="dropzone" class="card preview dropzone" aria-label="Image preview and dropzone">
               <div class="preview-inner">
-                <img id="previewImg" alt="Uploaded picture preview" hidden />
-                <div id="previewPlaceholder" class="placeholder">No image uploaded</div>
+                <div id="previewPlaceholder" class="placeholder">Drag &amp; Drop or Upload</div>
               </div>
-              <div class="drop-hint">Drag &amp; drop an image here</div>
+            </div>
+
+            <!-- Right: visualization + prediction -->
+            <div class="right">
+              <div class="viz">
+                <h3>Visualisation</h3>
+                <canvas id="chart" width="300" height="200" aria-label="Prediction probabilities bar chart"></canvas>
+              </div>
+              <div class="prediction">
+                <h4>Prediction:</h4>
+                <div id="predLabel" class="pill">blah blah 9</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="extension" class="content">
+        <h1>Extension Section</h1>
+
+         <section class="board">
+          <div class="board-grid">
+            <!-- Left: controls -->
+            <div class="controls">
+              <input id="file" type="file" accept="image/*" hidden />
+              <button id="uploadBtn" class="btn" type="button" aria-controls="file">Upload</button>
+              <button id="clearBtn" class="btn" type="button">Clear</button>
+
+              <div class="select card" aria-label="Choose Model">
+                <select id="modelSelect" title="Model">
+                  <option value="cnn" selected>Model: CNN (baseline)</option>
+                  <option value="deeznuts">Model: Deeznuts</option>
+                  <option value="blah">Model: Banana</option>
+                </select>
+              </div>
+
+              <button id="predictBtn" class="btn" type="button">Predict</button>
+            </div>
+
+      <!-- Middle: preview -->
+            <div id="dropzone" class="card preview dropzone" aria-label="Image preview and dropzone">
+              <div class="preview-inner">
+                <div id="previewPlaceholder" class="placeholder">Drag &amp; Drop or Upload</div>
+              </div>
+            </div>
+
+            <!-- Right: visualization + prediction -->
+            <div class="right">
+              <div class="viz">
+                <h3> <section class="board">
+          <div class="board-grid">
+            <!-- Left: controls -->
+            <div class="controls">
+              <input id="file" type="file" accept="image/*" hidden />
+              <button id="uploadBtn" class="btn" type="button" aria-controls="file">Upload</button>
+              <button id="clearBtn" class="btn" type="button">Clear</button>
+
+              <div class="select card" aria-label="Choose Model">
+                <select id="modelSelect" title="Model">
+                  <option value="cnn" selected>Model: CNN (baseline)</option>
+                  <option value="deeznuts">Model: Deeznuts</option>
+                  <option value="blah">Model: Banana</option>
+                </select>
+              </div>
+
+              <button id="predictBtn" class="btn" type="button">Predict</button>
+            </div>
+
+      <!-- Middle: preview -->
+            <div id="dropzone" class="card preview dropzone" aria-label="Image preview and dropzone">
+              <div class="preview-inner">
+                <div id="previewPlaceholder" class="placeholder">Drag &amp; Drop or Upload</div>
+              </div>
             </div>
 
             <!-- Right: visualization + prediction -->
@@ -64,10 +135,17 @@
             </div>
           </div>
         </section>
+      </section>Visualisation</h3>
+                <canvas id="chart" width="300" height="200" aria-label="Prediction probabilities bar chart"></canvas>
+              </div>
+              <div class="prediction">
+                <h4>Prediction:</h4>
+                <div id="predLabel" class="pill">blah blah 9</div>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
-
-      <section id="extension" class="content">
-        <h1>Extension Section</h1>
       </section>
 
       <section id="about" class="content">
