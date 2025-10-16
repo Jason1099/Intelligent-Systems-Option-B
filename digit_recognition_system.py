@@ -88,7 +88,7 @@ class DigitRecognitionSystem:
 
     def predict_image(self, image_path, out_dir="debug_digits"):
         if self.model is None:
-            raise ValueError("Model not loaded. Train or load a model first.")
+            raise ValueError("Model not loaded")
 
         os.makedirs(out_dir, exist_ok=True)
 
@@ -97,7 +97,7 @@ class DigitRecognitionSystem:
 
         bboxes, crops = self.segmentor.segmentation(preprocessed)
         if len(crops) == 0:
-            print("No digits found in the image")
+            print("No digits")
             return []
 
         # Save cropped digits
