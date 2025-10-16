@@ -19,17 +19,17 @@ class DigitRecognitionSystem:
         (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
         x_train = x_train[..., np.newaxis].astype("float32")
         x_test = x_test[..., np.newaxis].astype("float32")
-        # We will rescale in the model using Rescaling layer
+    
         print(f"Training data shape: {x_train.shape}")
         print(f"Test data shape: {x_test.shape}")
         return (x_train, y_train), (x_test, y_test)
 
-    def train_model(self, epochs=10, batch_size=128, vanilla=False):
+    def train_model(self, epochs=100, batch_size=128, vanilla=False):
         (x_train, y_train), (x_test, y_test) = self.prepare_mnist_data()
         self.model = create_vit_classifier(vanilla=vanilla)
 
         try:
-            opt = keras.optimizers.Adam()  # safe default
+            opt = keras.optimizers.Adam()
         except Exception:
             opt = keras.optimizers.Adam()
 
@@ -39,14 +39,29 @@ class DigitRecognitionSystem:
             metrics=[keras.metrics.SparseCategoricalAccuracy(name='accuracy')]
         )
 
-        # quick model summary to verify shapes
         self.model.summary()
+
+        lr_schedule = keras.callbacks.ReduceLROnPlateau(
+            monitor='val_loss', 
+            factor=0.5, 
+            patience=5, 
+            min_lr=1e-6,
+            verbose=1
+        )
+        
+        early_stop = keras.callbacks.EarlyStopping(
+            monitor='val_loss', 
+            patience=15, 
+            restore_best_weights=True,
+            verbose=1
+        )
 
         history = self.model.fit(
             x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
             validation_split=0.1,
+            callbacks=[lr_schedule, early_stop],
             verbose=1
         )
 
@@ -56,14 +71,12 @@ class DigitRecognitionSystem:
 
     def save_model(self, path='vit_mnist_model.keras'):
         if self.model:
-            # Use .keras extension for Keras 3.x native format
             if not path.endswith('.keras'):
                 path = path + '.keras'
             self.model.save(path)
             print(f"Model saved to {path}")
 
     def load_model(self, path='vit_mnist_model.keras'):
-        # When loading, the vt_model classes must be importable
         if not path.endswith('.keras'):
             path = path + '.keras'
         self.model = keras.models.load_model(path, custom_objects={
@@ -77,13 +90,11 @@ class DigitRecognitionSystem:
         if self.model is None:
             raise ValueError("Model not loaded. Train or load a model first.")
 
-        # Create output directory
         os.makedirs(out_dir, exist_ok=True)
 
         preprocessor = image_preprocessor(image_path=image_path, binarize=False)
         preprocessed = preprocessor.preprocess()
 
-        #Segment digits
         bboxes, crops = self.segmentor.segmentation(preprocessed)
         if len(crops) == 0:
             print("No digits found in the image")
@@ -105,8 +116,6 @@ class DigitRecognitionSystem:
                                         cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         cv2.imwrite(os.path.join(out_dir, "debug_binary.png"), debug_binary)
 
-        print(f"Saved {len(crops)} crops and debug images to: {out_dir}")
-
         processed_crops = []
         for crop in crops:
             crop_normalized = crop.astype('float32')
@@ -115,7 +124,7 @@ class DigitRecognitionSystem:
 
         processed_crops = np.array(processed_crops)
 
-        #Predict digits
+        #Predict
         predictions = self.model.predict(processed_crops, verbose=0)
         predicted_digits = np.argmax(predictions, axis=1)
         confidence_scores = np.max(tf.nn.softmax(predictions), axis=1)

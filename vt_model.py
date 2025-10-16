@@ -17,13 +17,12 @@ class vt_model(layers.Layer):
         self.proj = None 
 
     def build(self, input_shape):
-        # input_shape: (batch, H, W, C)
+        # input_shape
         num_channels = input_shape[-1] * (5 if not self.vanilla else 1)
         patch_vector_size = (self.patch_size ** 2) * num_channels
         
-        # Create Dense layer with explicit input shape
         self.proj = layers.Dense(units=self.projection_dim)
-        # Build the Dense layer with the correct input shape
+        # Build the Dense layer
         self.proj.build((None, patch_vector_size))
         super().build(input_shape)
 
@@ -40,7 +39,7 @@ class vt_model(layers.Layer):
             offset_h, offset_w = 0, self.half_patch
             target_h = self.image_size - self.half_patch
             target_w = self.image_size - self.half_patch
-        else:  # right-down
+        else: 
             offset_h, offset_w = self.half_patch, self.half_patch
             target_h = self.image_size - self.half_patch
             target_w = self.image_size - self.half_patch
@@ -78,7 +77,7 @@ class vt_model(layers.Layer):
         return tokens
 
     def compute_output_shape(self, input_shape):
-        # Return the output shape
+        # Return the output
         num_patches = (self.image_size // self.patch_size) ** 2
         return (input_shape[0], num_patches, self.projection_dim)
 
@@ -170,24 +169,19 @@ def create_vit_classifier(
 
     inputs = layers.Input(shape=input_shape)
 
-    # data augmentation
     x = layers.RandomRotation(0.02)(inputs)
     x = layers.RandomZoom(0.1)(x)
 
-    # scale pixels
     x = layers.Rescaling(1.0 / 255.0)(x)
 
-    # tokenization part
     tokens = vt_model(image_size=input_shape[0], patch_size=patch_size, projection_dim=projection_dim, vanilla=vanilla)(x)
 
-    # position encode
     encoded = PatchEncoder(num_patches=num_patches, projection_dim=projection_dim)(tokens)
 
     # Transformer blocks
     for _ in range(transformer_layers):
         x1 = layers.LayerNormalization(epsilon=1e-6)(encoded)
 
-        # scale queries with learned tau
         scaled_q = QueryScaler()(x1)
         attention_out = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1)(scaled_q, x1)
 
@@ -196,7 +190,6 @@ def create_vit_classifier(
         x3 = mlp(x3, hidden_units=[projection_dim * 2, projection_dim], dropout_rate=0.1)
         encoded = layers.Add()([x3, x2])
 
-    # classification head
     representation = layers.LayerNormalization(epsilon=1e-6)(encoded)
     representation = layers.Flatten()(representation)
     representation = layers.Dropout(0.3)(representation)

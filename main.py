@@ -9,7 +9,7 @@ if __name__ == "__main__":
     if os.path.exists(model_path):
         drs.load_model(model_path)
     else:
-        drs.train_model(epochs=10, batch_size=256, vanilla=False)
+        drs.train_model(epochs=100, batch_size=256, vanilla=False)
         drs.save_model(model_path)
 
     # Run prediction on the given test image
