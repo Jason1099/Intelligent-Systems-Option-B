@@ -7,6 +7,7 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.layers import Input
 from keras.models import Sequential
+from keras.utils import image_dataset_from_directory as load_image_dir
 import math
 from keras import callbacks
 import pandas as pd
@@ -14,12 +15,11 @@ import os
 
 
 
-
-
 class CNN: 
-    def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = ()):
+    def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = (), image_path = './digits'):
         self.dataset_load()
         self.savePath = save_path
+        self.imagePath = image_path
 
         if os.path.exists(self.savePath):
             self.model = load_model(self.savePath)
@@ -50,7 +50,7 @@ class CNN:
        
         earlyStop = callbacks.EarlyStopping(monitor = "val_loss", mode = "min", patience = 5, restore_best_weights = True)
        
-        history = model.fit(self.X_train, self.y_train, epochs = 200, batch_size = 16, validation_data=(self.X_test, self.y_test), callbacks = [earlyStop])
+        history = model.fit(self.X_train, self.y_train, epochs = 200, batch_size = 16, validation_data=(self.X_test, self.y_test), callbacks = [earlyStop], verbose = 1)
                                 
         hist_df = pd.DataFrame(history.history) 
        
@@ -62,9 +62,11 @@ class CNN:
         return model
     
     def predict(self):
-        print(self.y_test[:1])
-        prediction = np.argmax(self.model.predict(self.X_test[:1]))
-        print("Prediction: ", prediction)
+
+        dataset = load_image_dir(self.imagePath, labels = None, color_mode = "grayscale", image_size = (28,28), shuffle = False)
+        predictions = self.model.predict(dataset)
+        for x in predictions:
+            print(np.argmax(x))
     
 
 cnn = CNN()

@@ -9,6 +9,7 @@ class image_preprocessor:
 
     def preprocess(self):
         img = cv2.imread(self.image_path)
+        # img = cv2.resize(img, self.size)
         if img is None:
             raise ValueError(f"Image at path {self.image_path} could not be read.")
         

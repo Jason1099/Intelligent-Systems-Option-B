@@ -3,7 +3,7 @@ from segmentation import *
 import os, cv2
 
 out_dir = "digits"
-path = "handWrittenDigitsTest.png"
+path = "handTest2.png"
 os.makedirs(out_dir, exist_ok=True)
 
 processor = image_preprocessor(path, size=(28, 28))
@@ -12,7 +12,7 @@ processor.show_image(pre)
 
 seg = image_segmentation(min_area_ratio=0.1, max_ar=4.0, margin=5)
 bboxes, crops = seg.segmentation(pre)
-#rint(f"Found {len(bboxes)} valid components")
+print(f"Found {len(bboxes)} valid components")
 
 for i, crop in enumerate(crops):
         cv2.imwrite(os.path.join(out_dir, f"digit_{i:03}.png"), crop)
