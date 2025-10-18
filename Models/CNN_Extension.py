@@ -52,7 +52,8 @@ class CNN_Extension:
         def convert(path, filename):
             image = cv2.imread(join(path, filename))
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            _, image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+            
+            image = 255 - image
             image = np.reshape(image, (28, 28, -1))
             image = np.reshape(image, (28, 28, 1)).astype('float32')
             return image
@@ -68,33 +69,31 @@ class CNN_Extension:
         dataset = np.array(dataset).astype('float32') / 255
 
 
-        (x_train_mnist, y_train_mnist), (x_test_mnist, y_test_mnist) = mnist.load_data()
+        # (x_train_mnist, y_train_mnist), (x_test_mnist, y_test_mnist) = mnist.load_data()
 
-        x_train_mnist = x_train_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255
-        x_test_mnist = x_test_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255
+        # x_train_mnist = x_train_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255
+        # x_test_mnist = x_test_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255
         
-        idx = np.random.choice(len(x_train_mnist), 5000, replace=False)
-        x_train_mnist = x_train_mnist[idx]
-        y_train_mnist = y_train_mnist[idx]
+        # idx = np.random.choice(len(x_train_mnist), 5000, replace=False)
+        # x_train_mnist = x_train_mnist[idx]
+        # y_train_mnist = y_train_mnist[idx]
 
-        y_train_mnist = keras.utils.to_categorical(y_train_mnist, len(self.labels))
-        y_test_mnist = keras.utils.to_categorical(y_test_mnist, len(self.labels))   
+        # y_train_mnist = keras.utils.to_categorical(y_train_mnist, len(self.labels))
+        # y_test_mnist = keras.utils.to_categorical(y_test_mnist, len(self.labels))   
 
         x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
         dataset, labels, test_size=0.2)
 
-        self.x_train = np.concatenate([x_train_mnist, x_train])
-        self.y_train = np.concatenate([y_train_mnist, y_train])
+        # self.x_train = np.concatenate([x_train_mnist, x_train])
+        # self.y_train = np.concatenate([y_train_mnist, y_train])
 
-        self.x_test = np.concatenate([x_test_mnist, x_test])
-        self.y_test = np.concatenate([y_test_mnist, y_test])
+        # self.x_test = np.concatenate([x_test_mnist, x_test])
+        # self.y_test = np.concatenate([y_test_mnist, y_test])
 
-        import matplotlib.pyplot as plt
-
-        train_counts = np.sum(self.y_train, axis=0)
-        plt.bar(range(len(train_counts)), train_counts)
-        plt.title("Training Samples per Class")
-        plt.show()
+        self.x_train = x_train
+        self.y_train = y_train
+        self.x_test = x_test
+        self.y_test = y_test
 
     def train_model(self):
         num_class = len(self.labels)
@@ -111,11 +110,11 @@ class CNN_Extension:
         model.add(Dropout(0.5))
         model.add(Dense(num_class, activation='softmax'))
 
-        model.compile(loss = 'categorical_crossentropy', optimizer = keras.optimizers.Adadelta(), metrics = ['accuracy'])
+        model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
        
         earlyStop = callbacks.EarlyStopping(monitor = "val_loss", mode = "min", patience = 5, restore_best_weights = True)
        
-        history = model.fit(self.x_train, self.y_train, epochs = 200, batch_size = 16, validation_data=(self.x_test, self.y_test), callbacks = [earlyStop], verbose =2)
+        history = model.fit(self.x_train, self.y_train, epochs = 200, batch_size = 16, validation_data=(self.x_test, self.y_test), callbacks = [earlyStop], verbose =1)
                                 
         hist_df = pd.DataFrame(history.history) 
        
@@ -137,5 +136,5 @@ class CNN_Extension:
 
     
 
-cnn = CNN_Extension(save_path = './Models/SavedModels/CNN_Ext4.keras', history_path = './Models/History/history_CNN_Ext4.csv')
+cnn = CNN_Extension(save_path = './Models/SavedModels/CNN_Ext_1.keras', history_path = './Models/History/history_CNN_Ext_1.csv')
 cnn.predict()

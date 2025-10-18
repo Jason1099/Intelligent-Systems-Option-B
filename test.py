@@ -3,7 +3,7 @@ from segmentation import *
 import os, cv2
 
 out_dir = "digits"
-path = "handTest2.png"
+path = "image.png"
 os.makedirs(out_dir, exist_ok=True)
 
 processor = image_preprocessor(path, size=(28, 28))
