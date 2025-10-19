@@ -57,7 +57,7 @@ class DigitRecognitionSystem:
         labels = keras.utils.to_categorical(labels, len(self.labels))
      
         dataset = [convert(self.datasetPath, file) for file in files]
-        dataset = np.array(dataset).astype('float32') / 255
+        dataset = np.array(dataset).astype('float32')
 
         x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
         dataset, labels, test_size=0.2)
@@ -106,7 +106,7 @@ class DigitRecognitionSystem:
         
         hist_df = pd.DataFrame(history.history) 
 
-        with open('./Models/History/vt_ext', mode='w') as f:
+        with open('./Models/History/vt_ext_2', mode='w') as f:
             hist_df.to_csv(f)
 
         test_loss, test_acc = self.model.evaluate(x_test, y_test, verbose=0)
@@ -172,11 +172,12 @@ class DigitRecognitionSystem:
         predictions = self.model.predict(processed_crops, verbose=0)
         predicted_digits = np.argmax(predictions, axis=1)
         confidence_scores = np.max(tf.nn.softmax(predictions), axis=1)
-
+        inv_labels = {v: k for k, v in self.labels.items()}
+     
         results = []
         for i, (bbox, digit, conf) in enumerate(zip(bboxes, predicted_digits, confidence_scores)):
             results.append({
-                'digit': int(digit),
+                'digit': str(inv_labels[digit]),
                 'confidence': float(conf.numpy()) if hasattr(conf, 'numpy') else float(conf),
                 'bbox': tuple(map(int, bbox[:4])),
                 'position': int(i)
