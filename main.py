@@ -13,7 +13,7 @@ if __name__ == "__main__":
         drs.save_model(model_path)
 
     # Run prediction on the given test image
-    test_image = 'image.png'
+    test_image = './test_images/slash.png'
     if os.path.exists(test_image):
         results = drs.predict_image(test_image)
         
