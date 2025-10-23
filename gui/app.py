@@ -1,10 +1,3 @@
-# app_tabs.py
-# ===============================
-# Handwritten Number Recognition System + Math Extension
-# Streamlit version (ViT-only, no visualization)
-# Navigation: TABS
-# ===============================
-
 from io import BytesIO
 from PIL import Image
 import streamlit as st
@@ -12,7 +5,7 @@ import streamlit as st
 # Page config
 st.set_page_config(page_title="HNRS + Math (ViT)", page_icon="🧠", layout="wide")
 
-# Tiny style to mimic your UI's "pill"
+# Tiny style to mimic the UI's "pill"
 st.markdown("""
 <style>
 .pill {
@@ -75,7 +68,7 @@ with tabs[0]:
 
         # unique key for uploader
         up = st.file_uploader(
-            " ", type=["png", "jpg", "jpeg", "bmp", "gif"],
+            " ", type=["PDF", "png", "jpg"],
             key="main_uploader", label_visibility="collapsed"
         )
 
@@ -98,17 +91,11 @@ with tabs[0]:
             if not st.session_state.main_file_bytes:
                 st.warning("Please upload an image first.")
             else:
-                # TODO: call your ViT backend here and update st.session_state.main_pred
-                # Example:
-                #   import requests
-                #   files = {"image": st.session_state.main_file_bytes}
-                #   r = requests.post("http://localhost:8000/api/vit/digits", files=files)
-                #   st.session_state.main_pred = f"ViT: {r.json()['digit']}"
                 st.session_state.main_pred = "ViT: (pending backend)"
 
         st.markdown(f'<div class="pill">{st.session_state.main_pred}</div>', unsafe_allow_html=True)
 
-# Extension (Math) – ViT only
+# Extension (Math) 
 with tabs[1]:
     st.markdown("## Extension (Handwritten Math)")
 
@@ -150,12 +137,6 @@ with tabs[1]:
             if not st.session_state.ext_file_bytes:
                 st.warning("Please upload an image first.")
             else:
-                # TODO: call your ViT math OCR backend here and update st.session_state.ext_pred
-                # Example:
-                #   import requests
-                #   files = {"image": st.session_state.ext_file_bytes}
-                #   r = requests.post("http://localhost:8000/api/vit/math", files=files)
-                #   st.session_state.ext_pred = f"ViT: {r.json()['latex']}"
                 st.session_state.ext_pred = "ViT: (pending backend)"
 
         st.markdown(f'<div class="pill">{st.session_state.ext_pred}</div>', unsafe_allow_html=True)
