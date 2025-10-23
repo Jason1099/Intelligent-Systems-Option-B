@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os, json
 
 class image_segmentation:
     def __init__(self,
@@ -45,7 +46,7 @@ class image_segmentation:
         self.group_manifest = {}         # manifest storing order and grouping data
 
 
-    def segmentation(self, gray):
+    def segmentation(self, gray, export=True, out_dir="objects_export"):
         """Main segmentation pipeline:
         1. Binarize the image
         2. Detect connected components (digits)
@@ -89,9 +90,12 @@ class image_segmentation:
         # --- Step 7: build metadata manifest (lines, groups, reading order) ---
         self.group_manifest = self._build_group_manifest(lines_only, bboxes, bw.shape)
 
+        if export:
+            self._export_objects(gray, out_dir)
+
         # --- Step 8: crop each bounding box to save as training image ---
         crops = self._extract_crops(bw, ordered_bboxes)
-        return ordered_bboxes, crops
+        return ordered_bboxes, crops, self.group_manifest
 
 
     def _best_binarization(self, gray):
@@ -231,6 +235,64 @@ class image_segmentation:
             crops.append(crop)
         return crops
 
+
+    def _export_objects(self, gray, out_dir="objects_export"):
+        os.makedirs(os.path.join(out_dir, "objects"), exist_ok=True)
+        
+        bw = self.last_bw
+        manifest = self.group_manifest
+
+        # -------- save crops using manifest IDs --------
+        for comp in manifest["components"]:
+            cid = comp["component_id"]
+            x, y, w, h = comp["bbox"]
+            x0 = max(0, x - 2); y0 = max(0, y - 2)
+            x1 = min(bw.shape[1], x + w + 2); y1 = min(bw.shape[0], y + h + 2)
+            crop = bw[y0:y1, x0:x1]
+            out_path = os.path.join(out_dir, "objects", f"comp_{cid:04}.png")
+            cv2.imwrite(out_path, crop)
+            comp["crop_path"] = out_path.replace("\\", "/")
+
+        # -------- save manifest --------
+        with open(os.path.join(out_dir, "manifest.json"), "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=2)
+
+        # -------- build reading order (top -> bottom, left -> right) --------
+        if "reading_order" in manifest:
+            reading_order = manifest["reading_order"]
+        else:
+            reading_order = sorted(
+                range(len(manifest["components"])),
+                key=lambda cid: (manifest["components"][cid]["line_idx"],
+                                manifest["components"][cid]["pos_in_line"])
+            )
+
+        # -------- visualize reading order --------
+        vis = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+        palette = [(0,255,0),(255,0,0),(0,0,255),(0,255,255),(255,0,255),(255,255,0)]
+
+        for ord_idx, cid in enumerate(reading_order):
+            comp = manifest["components"][cid]
+            x, y, w, h = comp["bbox"]
+            color = palette[ord_idx % len(palette)]
+            cv2.rectangle(vis, (x, y), (x + w, y + h), color, 2)
+            label = f"ord:{ord_idx} id:{cid} L{comp['line_idx']}:{comp['pos_in_line']}"
+            cv2.putText(vis, label, (x, max(12, y - 5)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 1, cv2.LINE_AA)
+
+        # -------- draw yellow connectors for grouped digits --------
+        for g in manifest["groups"]:
+            members = g["members"]
+            for i in range(len(members) - 1):
+                b1 = manifest["components"][members[i]]["bbox"]
+                b2 = manifest["components"][members[i + 1]]["bbox"]
+                x1, y1, w1, h1 = b1
+                x2, y2, w2, h2 = b2
+                c1 = (x1 + w1 // 2, y1 + h1 // 2)
+                c2 = (x2 + w2 // 2, y2 + h2 // 2)
+                cv2.line(vis, c1, c2, (0,255,255), 1)
+
+        cv2.imwrite(os.path.join(out_dir, "debug_reading_order.png"), vis)
 
     @staticmethod
     def _y_overlap_ratio(b1, b2):

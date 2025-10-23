@@ -1,4 +1,4 @@
-import os
+import os, json
 import numpy as np
 import tensorflow as tf
 import keras
@@ -11,6 +11,8 @@ import sklearn
 import sklearn.model_selection
 import cv2
 import pandas as pd
+import ast
+import operator as op
 
 
 class DigitRecognitionSystem:
@@ -130,7 +132,7 @@ class DigitRecognitionSystem:
         })
         print(f"Model loaded from {path}")
 
-    def predict_image(self, image_path, out_dir="debug_digits"):
+    def _predict_image(self, image_path, out_dir="objects_export"):
         if self.model is None:
             raise ValueError("Model not loaded")
 
@@ -139,51 +141,91 @@ class DigitRecognitionSystem:
         preprocessor = image_preprocessor(image_path=image_path, binarize=False)
         preprocessed = preprocessor.preprocess()
 
-        bboxes, crops = self.segmentor.segmentation(preprocessed)
+        bboxes, crops, manifest = self.segmentor.segmentation(preprocessed)
         if len(crops) == 0:
             print("No digits")
             return []
 
-        # Save cropped digits
-        for i, crop in enumerate(crops):
-            cv2.imwrite(os.path.join(out_dir, f"digit_{i:03}.png"), crop)
-
-        vis = cv2.cvtColor(preprocessed, cv2.COLOR_GRAY2BGR)
-        for i, (x, y, w, h, area) in enumerate(bboxes):
-            cv2.rectangle(vis, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.putText(vis, str(i), (x, y - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-
-        cv2.imwrite(os.path.join(out_dir, "debug_boxes.png"), vis)
-
-        _, debug_binary = cv2.threshold(preprocessed, 0, 255,
-                                        cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        cv2.imwrite(os.path.join(out_dir, "debug_binary.png"), debug_binary)
-
+        H, W = self.model.input_shape[1], self.model.input_shape[2]
         processed_crops = []
         for crop in crops:
-            crop_normalized = crop.astype('float32')
-            crop_reshaped = crop_normalized[..., np.newaxis]
-            processed_crops.append(crop_reshaped)
+            if crop.ndim == 3:
+                crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            crop = cv2.resize(crop, (W, H))
+            crop = crop.astype('float32') / 255
+            crop = crop[..., np.newaxis]
+            processed_crops.append(crop)
 
-        processed_crops = np.array(processed_crops)
+        X = np.stack(processed_crops, axis=0)
+        preds = self.model.predict(X, verbose=0)
+        probs = tf.nn.softmax(preds).numpy()
+        cls_idx = np.argmax(probs, axis=1)
+        confs = probs[np.arange(len(probs)), cls_idx]
 
-        #Predict
-        predictions = self.model.predict(processed_crops, verbose=0)
-        predicted_digits = np.argmax(predictions, axis=1)
-        confidence_scores = np.max(tf.nn.softmax(predictions), axis=1)
         inv_labels = {v: k for k, v in self.labels.items()}
+
+        # #Predict
+        # predictions = self.model.predict(processed_crops, verbose=0)
+        # predicted_digits = np.argmax(predictions, axis=1)
+        # confidence_scores = np.max(tf.nn.softmax(predictions), axis=1)
+        # inv_labels = {v: k for k, v in self.labels.items()}
      
-        results = []
-        for i, (bbox, digit, conf) in enumerate(zip(bboxes, predicted_digits, confidence_scores)):
-            results.append({
-                'digit': str(inv_labels[digit]),
-                'confidence': float(conf.numpy()) if hasattr(conf, 'numpy') else float(conf),
+        ro = manifest.get("reading_order", list(range(len(bboxes))))
+        ordered_results = []
+        for pos, cid in enumerate(ro):
+            bbox = manifest["components"][cid]["bbox"]
+            k = cls_idx[cid]
+            conf = confs[cid]
+            ordered_results.append({
+                'digit': str(inv_labels.get(int(k), int(k))),
+                'confidence': float(conf),
                 'bbox': tuple(map(int, bbox[:4])),
-                'position': int(i)
+                'position': pos
             })
 
-        return results
+        expression = "".join(r["digit"] for r in ordered_results)
+
+        def _evaluate(exp):
+            OPS = {
+                ast.Add: op.add,
+                ast.Sub: op.sub,
+                ast.Mult: op.mul,
+                ast.Div: op.truediv,
+                ast.USub: op.neg
+            }
+
+            def _eval(node):
+                if isinstance(node, ast.Num):
+                    return node.n
+                elif isinstance(node, ast.BinOp):
+                    return OPS[type(node.op)](_eval(node.left), _eval(node.right))
+                elif isinstance(node, ast.UnaryOp):
+                    return OPS[type(node.op)](_eval(node.operand))
+                else:
+                    raise ValueError("Unsupported expression element")
+                
+            try:
+                node = ast.parse(exp, mode='eval').body
+                return _eval(node)
+            except Exception as e:
+                raise ValueError(f"Invalid expression '{exp}': {e}")
+            
+
+        result = None
+        try:
+            result = _evaluate(expression)
+        except ValueError:
+            print(f"Predicted expression (not evaluable): {expression}")
+
+        with open(os.path.join(out_dir, "results.json"), "w", encoding="utf-8") as f:
+            json.dump({
+                "image_path": image_path,
+                "expression": expression,
+                "result": result,
+                "results": ordered_results
+            }, f, indent =2)
+
+        return ordered_results
 
 
     def display_predictions(self, image_path, results):
@@ -201,3 +243,6 @@ class DigitRecognitionSystem:
         cv2.imshow('Predictions', img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+    
+    

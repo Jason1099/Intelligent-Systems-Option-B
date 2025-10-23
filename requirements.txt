@@ -2,3 +2,4 @@ opencv-python
 numpy
 keras
 pandas
+tensorflow-datasets
