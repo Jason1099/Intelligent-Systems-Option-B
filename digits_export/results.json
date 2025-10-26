@@ -1,0 +1,106 @@
+{
+  "image_path": "./input_images/image.png",
+  "expression": "111111111",
+  "result": 111111111,
+  "results": [
+    {
+      "digit": "1",
+      "confidence": 0.9979520440101624,
+      "bbox": [
+        12,
+        17,
+        29,
+        55
+      ],
+      "position": 0
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9983441829681396,
+      "bbox": [
+        10,
+        96,
+        41,
+        40
+      ],
+      "position": 1
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9976119995117188,
+      "bbox": [
+        9,
+        154,
+        28,
+        44
+      ],
+      "position": 2
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9982996582984924,
+      "bbox": [
+        45,
+        155,
+        34,
+        47
+      ],
+      "position": 3
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9914996027946472,
+      "bbox": [
+        80,
+        157,
+        32,
+        40
+      ],
+      "position": 4
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9982842803001404,
+      "bbox": [
+        6,
+        214,
+        29,
+        30
+      ],
+      "position": 5
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9949802756309509,
+      "bbox": [
+        37,
+        213,
+        8,
+        33
+      ],
+      "position": 6
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9981399774551392,
+      "bbox": [
+        49,
+        216,
+        32,
+        29
+      ],
+      "position": 7
+    },
+    {
+      "digit": "1",
+      "confidence": 0.9958348274230957,
+      "bbox": [
+        75,
+        217,
+        34,
+        32
+      ],
+      "position": 8
+    }
+  ]
+}

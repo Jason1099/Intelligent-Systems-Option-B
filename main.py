@@ -1,9 +1,9 @@
 import os
-from digit_recognition_system import DigitRecognitionSystem
+from Models.digit_recognition_system import DigitRecognitionSystem
 
 if __name__ == "__main__":
     drs = DigitRecognitionSystem()
-    model_path = './Models/SavedModels/vit_ext_2.keras'
+    model_path = './Models/SavedModels/vit_mnist_model.keras'
 
     # Load the model or use the existing one
     if os.path.exists(model_path):
@@ -13,7 +13,7 @@ if __name__ == "__main__":
         drs.save_model(model_path)
 
     # Run prediction on the given test image
-    test_image = './test_images/slash.png'
+    test_image = './input_images/Input_Images/handWrittenDigitsTest.png'
     if os.path.exists(test_image):
         results = drs.predict_image(test_image)
         

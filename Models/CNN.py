@@ -12,14 +12,20 @@ import math
 from keras import callbacks
 import pandas as pd
 import os
-
+from helpers.segmentation import image_segmentation 
+from helpers.preprocess import image_preprocessor
+import cv2
+import shutil
+import json
 
 
 class CNN: 
-    def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = (), image_path = './digits'):
+    def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = (28, 28, 1), image_path = './digits'):
         self.dataset_load()
         self.savePath = save_path
         self.imagePath = image_path
+        self.input_shape = input_shape
+        self.segmentor = image_segmentation(crop_size=28)
 
         if os.path.exists(self.savePath):
             self.model = load_model(self.savePath)
@@ -60,14 +66,137 @@ class CNN:
 
         model.save(self.savePath)
         return model
-    
-    def predict(self):
 
-        dataset = load_image_dir(self.imagePath, labels = None, color_mode = "grayscale", image_size = (28,28), shuffle = False)
-        predictions = self.model.predict(dataset)
-        for x in predictions:
-            print(np.argmax(x))
+
+    def predict_image(self, image_path, out_dir="./digits_export"):
+        if self.model is None:
+            raise ValueError("Model not loaded")
+
+        if os.path.exists(out_dir):
+            contents = os.listdir(out_dir)
+            for item in contents:
+                item_path = os.path.join(out_dir, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+        dir2 = os.path.join(out_dir, "objects")
+        if os.path.exists(dir2):
+            contents = os.listdir(dir2)
+            for item in contents:
+                item_path = os.path.join(dir2, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+        os.makedirs(out_dir, exist_ok=True)
+
+        preprocessor = image_preprocessor(image_path=image_path, binarize=False)
+        preprocessed = preprocessor.preprocess()
+
+        bboxes, crops, manifest = self.segmentor.segmentation(preprocessed)
+        if len(crops) == 0:
+            print("No digits")
+            return []
+
+        H, W = self.input_shape[0], self.input_shape[1]
+        processed_crops = []
+        for crop in crops:
+            if crop.ndim == 3:
+                crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            crop = cv2.resize(crop, (W, H))
+            crop = crop.astype('float32') / 255
+            crop = crop[..., np.newaxis]
+            processed_crops.append(crop)
+
+        X = np.stack(processed_crops, axis=0)
+        preds = self.model.predict(X, verbose=0)
+        cls_idx = np.argmax(preds, axis=1)
+
+     
+        ro = manifest.get("reading_order", list(range(len(bboxes))))
+        ordered_results = []
+        for pos, cid in enumerate(ro):
+            bbox = manifest["components"][cid]["bbox"]
+            k = cls_idx[cid]
+            ordered_results.append({
+                'digit': str(k),
+                'bbox': tuple(map(int, bbox[:4])),
+                'position': pos
+            })
+
+        with open(os.path.join(out_dir, "results.json"), "w", encoding="utf-8") as f:
+            json.dump({
+                "image_path": image_path,
+                "results": ordered_results
+            }, f, indent =2)
+
+        with open(os.path.join(out_dir, "manifest.json"), "r", encoding="utf-8") as f:
+            manifestjson = json.load(f)
+          
+        resultsjson = None 
+        with open(os.path.join(out_dir, "results.json"), "r", encoding="utf-8") as f:
+            resultsjson = json.load(f)
+
+                # --- 2. Create Bbox-to-Component_ID Lookup Map ---
+        # Convert the list bbox to a tuple so it can be used as a dictionary key
+        bbox_to_component_id = {
+            tuple(comp['bbox']): comp['component_id']
+            for comp in manifestjson['components']
+        }
+
+        # --- 3. Map Digits to Component IDs via Bbox ---
+        component_to_digit = {}
+        for result in resultsjson['results']:
+            bbox_tuple = tuple(result['bbox'])
+            
+            # Safely get the component_id using the bbox
+            if bbox_tuple in bbox_to_component_id:
+                comp_id = bbox_to_component_id[bbox_tuple]
+                component_to_digit[comp_id] = result['digit']
+
+        # --- 4. Process Groups ---
+        group_combined_numbers = {}
+
+        for group in manifestjson['groups']:
+            group_id = group['group_id']
+            members = group['members'] # Members are correctly ordered within the group (pos_in_group)
+            
+            # Concatenate the digits of the members in their defined order
+            combined_number = "".join(component_to_digit.get(cid, '') for cid in members)
+            
+            # Only store the combined number if all members had predictions
+            if combined_number:
+                group_combined_numbers[group_id] = combined_number
+
+        # --- 5. Construct Final Ordered List ---
+        final_numbers = []
+        processed_group_ids = set()
+
+        # Create a quick lookup for component data
+        component_lookup = {c['component_id']: c for c in manifestjson['components']}
+
+        for component_id in manifestjson['reading_order']:
+            component_data = component_lookup.get(component_id)
+            
+            if component_data is None:
+                continue 
+                
+            group_id = component_data.get('group_id')
+            
+            if group_id is not None and group_id not in processed_group_ids:
+         
+                combined = group_combined_numbers.get(group_id)
+                if combined:
+                    final_numbers.append(combined)
+                    processed_group_ids.add(group_id)
+                
+            elif group_id is None:
+      
+                digit = component_to_digit.get(component_id)
+                if digit:
+                    final_numbers.append(digit)
+                
+        print("Final list of numbers (based on Bbox matching and reading order):")
+        print(final_numbers)
+        return ordered_results, final_numbers
     
 
-cnn = CNN()
-cnn.predict()
+cnn = CNN(save_path = './Models/SavedModels/CNN.keras')
+cnn.predict_image(image_path = './Input_Images/image.png')

@@ -1,696 +1,163 @@
 {
   "image_size": [
-    1245,
-    818
+    122,
+    274
   ],
   "components": [
     {
       "component_id": 0,
       "bbox": [
-        59,
-        15,
-        28,
-        90
+        12,
+        17,
+        29,
+        55
       ],
       "line_idx": 0,
       "pos_in_line": 0,
       "group_id": null,
       "pos_in_group": null,
       "order_index": 0,
-      "crop_path": "digits_export/train/comp_0000.png"
+      "crop_path": "digits_export/objects/comp_0000.png"
     },
     {
       "component_id": 1,
       "bbox": [
-        666,
-        29,
-        67,
-        53
+        10,
+        96,
+        41,
+        40
       ],
-      "line_idx": 0,
-      "pos_in_line": 1,
+      "line_idx": 1,
+      "pos_in_line": 0,
       "group_id": null,
       "pos_in_group": null,
       "order_index": 1,
-      "crop_path": "digits_export/train/comp_0001.png"
+      "crop_path": "digits_export/objects/comp_0001.png"
     },
     {
       "component_id": 2,
       "bbox": [
-        1139,
-        29,
-        66,
-        61
+        9,
+        154,
+        28,
+        44
       ],
-      "line_idx": 0,
-      "pos_in_line": 2,
-      "group_id": null,
-      "pos_in_group": null,
+      "line_idx": 2,
+      "pos_in_line": 0,
+      "group_id": 0,
+      "pos_in_group": 0,
       "order_index": 2,
-      "crop_path": "digits_export/train/comp_0002.png"
+      "crop_path": "digits_export/objects/comp_0002.png"
     },
     {
       "component_id": 3,
       "bbox": [
-        1119,
-        127,
-        40,
-        60
+        45,
+        155,
+        34,
+        47
       ],
-      "line_idx": 1,
-      "pos_in_line": 5,
-      "group_id": 1,
+      "line_idx": 2,
+      "pos_in_line": 1,
+      "group_id": 0,
       "pos_in_group": 1,
-      "order_index": 8,
-      "crop_path": "digits_export/train/comp_0003.png"
+      "order_index": 3,
+      "crop_path": "digits_export/objects/comp_0003.png"
     },
     {
       "component_id": 4,
       "bbox": [
-        1054,
-        134,
-        53,
-        63
+        80,
+        157,
+        32,
+        40
       ],
-      "line_idx": 1,
-      "pos_in_line": 4,
-      "group_id": 1,
-      "pos_in_group": 0,
-      "order_index": 7,
-      "crop_path": "digits_export/train/comp_0004.png"
+      "line_idx": 2,
+      "pos_in_line": 2,
+      "group_id": 0,
+      "pos_in_group": 2,
+      "order_index": 4,
+      "crop_path": "digits_export/objects/comp_0004.png"
     },
     {
       "component_id": 5,
       "bbox": [
-        1169,
-        135,
-        41,
-        74
+        37,
+        213,
+        8,
+        33
       ],
-      "line_idx": 1,
-      "pos_in_line": 6,
+      "line_idx": 3,
+      "pos_in_line": 1,
       "group_id": 1,
-      "pos_in_group": 2,
-      "order_index": 9,
-      "crop_path": "digits_export/train/comp_0005.png"
+      "pos_in_group": 1,
+      "order_index": 6,
+      "crop_path": "digits_export/objects/comp_0005.png"
     },
     {
       "component_id": 6,
       "bbox": [
-        622,
-        138,
-        71,
-        44
+        6,
+        214,
+        29,
+        30
       ],
-      "line_idx": 1,
-      "pos_in_line": 2,
-      "group_id": 0,
+      "line_idx": 3,
+      "pos_in_line": 0,
+      "group_id": 1,
       "pos_in_group": 0,
       "order_index": 5,
-      "crop_path": "digits_export/train/comp_0006.png"
+      "crop_path": "digits_export/objects/comp_0006.png"
     },
     {
       "component_id": 7,
       "bbox": [
-        688,
-        138,
-        51,
-        57
+        49,
+        216,
+        32,
+        29
       ],
-      "line_idx": 1,
-      "pos_in_line": 3,
-      "group_id": 0,
-      "pos_in_group": 1,
-      "order_index": 6,
-      "crop_path": "digits_export/train/comp_0007.png"
+      "line_idx": 3,
+      "pos_in_line": 2,
+      "group_id": 1,
+      "pos_in_group": 2,
+      "order_index": 7,
+      "crop_path": "digits_export/objects/comp_0007.png"
     },
     {
       "component_id": 8,
       "bbox": [
-        175,
-        142,
-        79,
-        64
-      ],
-      "line_idx": 1,
-      "pos_in_line": 1,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 4,
-      "crop_path": "digits_export/train/comp_0008.png"
-    },
-    {
-      "component_id": 9,
-      "bbox": [
-        64,
-        147,
-        49,
-        47
-      ],
-      "line_idx": 1,
-      "pos_in_line": 0,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 3,
-      "crop_path": "digits_export/train/comp_0009.png"
-    },
-    {
-      "component_id": 10,
-      "bbox": [
-        273,
-        239,
-        53,
-        67
-      ],
-      "line_idx": 2,
-      "pos_in_line": 2,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 12,
-      "crop_path": "digits_export/train/comp_0010.png"
-    },
-    {
-      "component_id": 11,
-      "bbox": [
-        152,
-        246,
-        59,
-        56
-      ],
-      "line_idx": 2,
-      "pos_in_line": 1,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 11,
-      "crop_path": "digits_export/train/comp_0011.png"
-    },
-    {
-      "component_id": 12,
-      "bbox": [
-        60,
-        250,
-        64,
-        67
-      ],
-      "line_idx": 2,
-      "pos_in_line": 0,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 10,
-      "crop_path": "digits_export/train/comp_0012.png"
-    },
-    {
-      "component_id": 13,
-      "bbox": [
-        556,
-        250,
-        60,
-        71
-      ],
-      "line_idx": 2,
-      "pos_in_line": 3,
-      "group_id": 2,
-      "pos_in_group": 0,
-      "order_index": 13,
-      "crop_path": "digits_export/train/comp_0013.png"
-    },
-    {
-      "component_id": 14,
-      "bbox": [
-        616,
-        258,
-        58,
-        62
-      ],
-      "line_idx": 2,
-      "pos_in_line": 4,
-      "group_id": 2,
-      "pos_in_group": 1,
-      "order_index": 14,
-      "crop_path": "digits_export/train/comp_0014.png"
-    },
-    {
-      "component_id": 15,
-      "bbox": [
-        692,
-        262,
-        53,
-        81
-      ],
-      "line_idx": 2,
-      "pos_in_line": 5,
-      "group_id": 2,
-      "pos_in_group": 2,
-      "order_index": 15,
-      "crop_path": "digits_export/train/comp_0015.png"
-    },
-    {
-      "component_id": 16,
-      "bbox": [
-        777,
-        270,
-        62,
-        64
-      ],
-      "line_idx": 2,
-      "pos_in_line": 7,
-      "group_id": 2,
-      "pos_in_group": 4,
-      "order_index": 17,
-      "crop_path": "digits_export/train/comp_0016.png"
-    },
-    {
-      "component_id": 17,
-      "bbox": [
-        749,
-        272,
-        23,
-        67
-      ],
-      "line_idx": 2,
-      "pos_in_line": 6,
-      "group_id": 2,
-      "pos_in_group": 3,
-      "order_index": 16,
-      "crop_path": "digits_export/train/comp_0017.png"
-    },
-    {
-      "component_id": 18,
-      "bbox": [
-        109,
-        368,
-        49,
-        64
-      ],
-      "line_idx": 3,
-      "pos_in_line": 1,
-      "group_id": 3,
-      "pos_in_group": 1,
-      "order_index": 19,
-      "crop_path": "digits_export/train/comp_0018.png"
-    },
-    {
-      "component_id": 19,
-      "bbox": [
-        172,
-        371,
-        51,
-        72
-      ],
-      "line_idx": 3,
-      "pos_in_line": 2,
-      "group_id": 3,
-      "pos_in_group": 2,
-      "order_index": 20,
-      "crop_path": "digits_export/train/comp_0019.png"
-    },
-    {
-      "component_id": 20,
-      "bbox": [
-        50,
-        376,
-        53,
-        54
-      ],
-      "line_idx": 3,
-      "pos_in_line": 0,
-      "group_id": 3,
-      "pos_in_group": 0,
-      "order_index": 18,
-      "crop_path": "digits_export/train/comp_0020.png"
-    },
-    {
-      "component_id": 21,
-      "bbox": [
-        870,
-        384,
-        21,
-        68
-      ],
-      "line_idx": 3,
-      "pos_in_line": 3,
-      "group_id": 4,
-      "pos_in_group": 0,
-      "order_index": 21,
-      "crop_path": "digits_export/train/comp_0021.png"
-    },
-    {
-      "component_id": 22,
-      "bbox": [
-        893,
-        388,
-        24,
-        66
-      ],
-      "line_idx": 3,
-      "pos_in_line": 4,
-      "group_id": 4,
-      "pos_in_group": 1,
-      "order_index": 22,
-      "crop_path": "digits_export/train/comp_0022.png"
-    },
-    {
-      "component_id": 23,
-      "bbox": [
-        961,
-        397,
-        20,
-        53
-      ],
-      "line_idx": 3,
-      "pos_in_line": 5,
-      "group_id": 5,
-      "pos_in_group": 0,
-      "order_index": 23,
-      "crop_path": "digits_export/train/comp_0023.png"
-    },
-    {
-      "component_id": 24,
-      "bbox": [
-        985,
-        398,
-        60,
-        54
-      ],
-      "line_idx": 3,
-      "pos_in_line": 6,
-      "group_id": 5,
-      "pos_in_group": 1,
-      "order_index": 24,
-      "crop_path": "digits_export/train/comp_0024.png"
-    },
-    {
-      "component_id": 25,
-      "bbox": [
-        1045,
-        400,
-        21,
-        63
-      ],
-      "line_idx": 3,
-      "pos_in_line": 7,
-      "group_id": 5,
-      "pos_in_group": 2,
-      "order_index": 25,
-      "crop_path": "digits_export/train/comp_0025.png"
-    },
-    {
-      "component_id": 26,
-      "bbox": [
-        1066,
-        404,
-        47,
-        54
-      ],
-      "line_idx": 3,
-      "pos_in_line": 8,
-      "group_id": 5,
-      "pos_in_group": 3,
-      "order_index": 26,
-      "crop_path": "digits_export/train/comp_0026.png"
-    },
-    {
-      "component_id": 27,
-      "bbox": [
-        234,
-        478,
-        104,
-        69
-      ],
-      "line_idx": 4,
-      "pos_in_line": 5,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 32,
-      "crop_path": "digits_export/train/comp_0027.png"
-    },
-    {
-      "component_id": 28,
-      "bbox": [
-        39,
-        485,
-        24,
-        77
-      ],
-      "line_idx": 4,
-      "pos_in_line": 0,
-      "group_id": 6,
-      "pos_in_group": 0,
-      "order_index": 27,
-      "crop_path": "digits_export/train/comp_0028.png"
-    },
-    {
-      "component_id": 29,
-      "bbox": [
-        199,
-        486,
-        25,
-        63
-      ],
-      "line_idx": 4,
-      "pos_in_line": 4,
-      "group_id": 7,
-      "pos_in_group": 2,
-      "order_index": 31,
-      "crop_path": "digits_export/train/comp_0029.png"
-    },
-    {
-      "component_id": 30,
-      "bbox": [
         75,
-        488,
-        51,
-        62
+        217,
+        34,
+        32
       ],
-      "line_idx": 4,
-      "pos_in_line": 1,
-      "group_id": 6,
-      "pos_in_group": 1,
-      "order_index": 28,
-      "crop_path": "digits_export/train/comp_0030.png"
-    },
-    {
-      "component_id": 31,
-      "bbox": [
-        140,
-        488,
-        24,
-        69
-      ],
-      "line_idx": 4,
-      "pos_in_line": 2,
-      "group_id": 7,
-      "pos_in_group": 0,
-      "order_index": 29,
-      "crop_path": "digits_export/train/comp_0031.png"
-    },
-    {
-      "component_id": 32,
-      "bbox": [
-        163,
-        488,
-        28,
-        81
-      ],
-      "line_idx": 4,
+      "line_idx": 3,
       "pos_in_line": 3,
-      "group_id": 7,
-      "pos_in_group": 1,
-      "order_index": 30,
-      "crop_path": "digits_export/train/comp_0032.png"
-    },
-    {
-      "component_id": 33,
-      "bbox": [
-        1083,
-        495,
-        99,
-        79
-      ],
-      "line_idx": 4,
-      "pos_in_line": 6,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 33,
-      "crop_path": "digits_export/train/comp_0033.png"
-    },
-    {
-      "component_id": 34,
-      "bbox": [
-        90,
-        672,
-        96,
-        110
-      ],
-      "line_idx": 5,
-      "pos_in_line": 0,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 34,
-      "crop_path": "digits_export/train/comp_0034.png"
-    },
-    {
-      "component_id": 35,
-      "bbox": [
-        574,
-        696,
-        81,
-        90
-      ],
-      "line_idx": 5,
-      "pos_in_line": 3,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 37,
-      "crop_path": "digits_export/train/comp_0035.png"
-    },
-    {
-      "component_id": 36,
-      "bbox": [
-        471,
-        702,
-        63,
-        63
-      ],
-      "line_idx": 5,
-      "pos_in_line": 2,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 36,
-      "crop_path": "digits_export/train/comp_0036.png"
-    },
-    {
-      "component_id": 37,
-      "bbox": [
-        938,
-        716,
-        72,
-        89
-      ],
-      "line_idx": 5,
-      "pos_in_line": 5,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 39,
-      "crop_path": "digits_export/train/comp_0037.png"
-    },
-    {
-      "component_id": 38,
-      "bbox": [
-        817,
-        721,
-        72,
-        55
-      ],
-      "line_idx": 5,
-      "pos_in_line": 4,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 38,
-      "crop_path": "digits_export/train/comp_0038.png"
-    },
-    {
-      "component_id": 39,
-      "bbox": [
-        263,
-        727,
-        93,
-        19
-      ],
-      "line_idx": 5,
-      "pos_in_line": 1,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 35,
-      "crop_path": "digits_export/train/comp_0039.png"
-    },
-    {
-      "component_id": 40,
-      "bbox": [
-        1064,
-        729,
-        66,
-        57
-      ],
-      "line_idx": 5,
-      "pos_in_line": 6,
-      "group_id": null,
-      "pos_in_group": null,
-      "order_index": 40,
-      "crop_path": "digits_export/train/comp_0040.png"
+      "group_id": 1,
+      "pos_in_group": 3,
+      "order_index": 8,
+      "crop_path": "digits_export/objects/comp_0008.png"
     }
   ],
   "groups": [
     {
       "group_id": 0,
-      "line_idx": 1,
+      "line_idx": 2,
       "members": [
-        6,
-        7
+        2,
+        3,
+        4
       ]
     },
     {
       "group_id": 1,
-      "line_idx": 1,
-      "members": [
-        4,
-        3,
-        5
-      ]
-    },
-    {
-      "group_id": 2,
-      "line_idx": 2,
-      "members": [
-        13,
-        14,
-        15,
-        17,
-        16
-      ]
-    },
-    {
-      "group_id": 3,
       "line_idx": 3,
       "members": [
-        20,
-        18,
-        19
-      ]
-    },
-    {
-      "group_id": 4,
-      "line_idx": 3,
-      "members": [
-        21,
-        22
-      ]
-    },
-    {
-      "group_id": 5,
-      "line_idx": 3,
-      "members": [
-        23,
-        24,
-        25,
-        26
-      ]
-    },
-    {
-      "group_id": 6,
-      "line_idx": 4,
-      "members": [
-        28,
-        30
-      ]
-    },
-    {
-      "group_id": 7,
-      "line_idx": 4,
-      "members": [
-        31,
-        32,
-        29
+        6,
+        5,
+        7,
+        8
       ]
     }
   ],
@@ -698,43 +165,11 @@
     0,
     1,
     2,
-    9,
-    8,
-    6,
-    7,
-    4,
     3,
+    4,
+    6,
     5,
-    12,
-    11,
-    10,
-    13,
-    14,
-    15,
-    17,
-    16,
-    20,
-    18,
-    19,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    28,
-    30,
-    31,
-    32,
-    29,
-    27,
-    33,
-    34,
-    39,
-    36,
-    35,
-    38,
-    37,
-    40
+    7,
+    8
   ]
 }
