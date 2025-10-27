@@ -132,7 +132,7 @@ class DigitRecognitionSystem:
         })
         print(f"Model loaded from {path}")
 
-    def _predict_image(self, image_path, out_dir="digits_export"):
+    def predict_image(self, image_path, out_dir="digits_export"):
         if self.model is None:
             raise ValueError("Model not loaded")
 

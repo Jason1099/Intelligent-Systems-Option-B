@@ -111,10 +111,17 @@ class CNN:
 
      
         ro = manifest.get("reading_order", list(range(len(bboxes))))
+
+        cid_to_prediction = {
+            cid: str(cls_idx[pos]) 
+            for pos, cid in enumerate(ro)
+        }
+
         ordered_results = []
         for pos, cid in enumerate(ro):
             bbox = manifest["components"][cid]["bbox"]
-            k = cls_idx[cid]
+            # --- FIX: Use the map to get the correct prediction ---
+            k = cid_to_prediction[cid] 
             ordered_results.append({
                 'digit': str(k),
                 'bbox': tuple(map(int, bbox[:4])),
@@ -126,42 +133,17 @@ class CNN:
                 "image_path": image_path,
                 "results": ordered_results
             }, f, indent =2)
-
-        with open(os.path.join(out_dir, "manifest.json"), "r", encoding="utf-8") as f:
-            manifestjson = json.load(f)
-          
-        resultsjson = None 
-        with open(os.path.join(out_dir, "results.json"), "r", encoding="utf-8") as f:
-            resultsjson = json.load(f)
-
-                # --- 2. Create Bbox-to-Component_ID Lookup Map ---
-        # Convert the list bbox to a tuple so it can be used as a dictionary key
-        bbox_to_component_id = {
-            tuple(comp['bbox']): comp['component_id']
-            for comp in manifestjson['components']
-        }
-
-        # --- 3. Map Digits to Component IDs via Bbox ---
-        component_to_digit = {}
-        for result in resultsjson['results']:
-            bbox_tuple = tuple(result['bbox'])
             
-            # Safely get the component_id using the bbox
-            if bbox_tuple in bbox_to_component_id:
-                comp_id = bbox_to_component_id[bbox_tuple]
-                component_to_digit[comp_id] = result['digit']
 
         # --- 4. Process Groups ---
         group_combined_numbers = {}
-
-        for group in manifestjson['groups']:
+        for group in manifest['groups']:
             group_id = group['group_id']
-            members = group['members'] # Members are correctly ordered within the group (pos_in_group)
+            members = group['members'] # Members are correctly ordered within the group
             
-            # Concatenate the digits of the members in their defined order
-            combined_number = "".join(component_to_digit.get(cid, '') for cid in members)
+            # Concatenate the digits using our new map
+            combined_number = "".join(cid_to_prediction.get(cid, '') for cid in members)
             
-            # Only store the combined number if all members had predictions
             if combined_number:
                 group_combined_numbers[group_id] = combined_number
 
@@ -170,9 +152,9 @@ class CNN:
         processed_group_ids = set()
 
         # Create a quick lookup for component data
-        component_lookup = {c['component_id']: c for c in manifestjson['components']}
+        component_lookup = {c['component_id']: c for c in manifest['components']}
 
-        for component_id in manifestjson['reading_order']:
+        for component_id in manifest['reading_order']:
             component_data = component_lookup.get(component_id)
             
             if component_data is None:
@@ -181,20 +163,19 @@ class CNN:
             group_id = component_data.get('group_id')
             
             if group_id is not None and group_id not in processed_group_ids:
-         
                 combined = group_combined_numbers.get(group_id)
                 if combined:
                     final_numbers.append(combined)
                     processed_group_ids.add(group_id)
                 
             elif group_id is None:
-      
-                digit = component_to_digit.get(component_id)
+                digit = cid_to_prediction.get(component_id) # Use our new map
                 if digit:
                     final_numbers.append(digit)
                 
-        print("Final list of numbers (based on Bbox matching and reading order):")
+        print("Final list of numbers (based on direct mapping and reading order):")
         print(final_numbers)
+        # Return both for compatibility
         return ordered_results, final_numbers
     
 
