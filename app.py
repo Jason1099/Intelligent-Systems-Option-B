@@ -22,12 +22,16 @@ st.markdown("""
 
 # Initialize Streamlit session state variables
 def init_state():
+    # main tab state
     st.session_state.setdefault("main_file_bytes", None)
     st.session_state.setdefault("main_pred", "–")
+    st.session_state.setdefault("main_model_choice", "CNN")  # default model
+    st.session_state.setdefault("main_models_loaded", {"CNN": False, "ViT": False})
+    st.session_state.setdefault("main_models", {"CNN": None, "ViT": None})
+
+    # extension tab state
     st.session_state.setdefault("ext_file_bytes", None)
     st.session_state.setdefault("ext_pred", "–")
-    st.session_state.setdefault("model", None)
-    st.session_state.setdefault("model_loaded", False)
 
 # Functions to clear stored file/prediction states
 def clear_main_state():
@@ -53,14 +57,28 @@ with tabs[0]:
     with col_left:
         st.write("#### Controls")
 
+        # Model selector
+        st.caption("Select Model")
+        st.session_state.main_model_choice = st.radio(
+            "Model",
+            options=["CNN", "ViT"],
+            index=["CNN", "ViT"].index(st.session_state.main_model_choice),
+            label_visibility="collapsed",
+            key="main_model_selector",
+        )
+
+        # Clear button
         if st.button("Clear", key="main_clear_btn", type="secondary", use_container_width=True):
             clear_main_state()
             st.rerun()
 
         st.write("")
-        st.caption("Model")
-        st.markdown('<div class="card">Model: Vision Transformer (ViT)</div>', unsafe_allow_html=True)
+        st.caption("Model Info")
+        # Dynamic card reflecting selected model
+        selected_model_label = "Convolutional Neural Network (CNN)" if st.session_state.main_model_choice == "CNN" else "Vision Transformer (ViT)"
+        st.markdown(f'<div class="card">Model: {selected_model_label}</div>', unsafe_allow_html=True)
 
+        # Predict button
         main_predict_clicked = st.button("Recognise", key="main_predict_btn", use_container_width=True)
 
     # Middle column - image uploader and preview
@@ -82,12 +100,55 @@ with tabs[0]:
     with col_right:
         st.write("#### Result")
 
+        # Lazy-load selected model (replace with your actual loaders)
+        def load_cnn():
+            # TODO: load and return your CNN model object
+            return "cnn_model_obj"
+
+        def load_cvit():
+            # TODO: load and return your cViT model object
+            return "cvit_model_obj"
+        # Simple preprocessor (replace with your actual preprocessing)
+        def preprocess_pil_for_model(img: Image.Image, model_name: str):
+            # Example: convert to grayscale and resize to 28x28 for CNN; 224x224 for cViT
+            if model_name == "CNN":
+                return img.convert("L").resize((28, 28))
+            else:
+                return img.convert("RGB").resize((224, 224))
+
+        # Simple predictor stubs (replace with your actual inference)
+        def predict_with_cnn(model, img_proc):
+            # TODO: run your CNN forward pass; return predicted digit as string
+            return "CNN: (pending backend)"
+
+        def predict_with_cvit(model, img_proc):
+            # TODO: run your cViT forward pass; return predicted digit as string
+            return "cViT: (pending backend)"
+
         if main_predict_clicked:
             if not st.session_state.main_file_bytes:
                 st.warning("Please upload an image first.")
             else:
-                # TODO: replace this with actual prediction from your model
-                st.session_state.main_pred = "ViT: (pending backend)"
+                model_name = st.session_state.main_model_choice
+
+                # Load once per model name
+                if not st.session_state.main_models_loaded[model_name]:
+                    if model_name == "CNN":
+                        st.session_state.main_models["CNN"] = load_cnn()
+                    else:
+                        st.session_state.main_models["cViT"] = load_cvit()
+                    st.session_state.main_models_loaded[model_name] = True
+
+                # Preprocess and predict
+                img_obj = Image.open(BytesIO(st.session_state.main_file_bytes))
+                proc = preprocess_pil_for_model(img_obj, model_name)
+
+                if model_name == "CNN":
+                    pred = predict_with_cnn(st.session_state.main_models["CNN"], proc)
+                else:
+                    pred = predict_with_cvit(st.session_state.main_models["cViT"], proc)
+
+                st.session_state.main_pred = pred
 
         st.markdown(f'<div class="pill">{st.session_state.main_pred}</div>', unsafe_allow_html=True)
 
@@ -134,7 +195,7 @@ with tabs[1]:
             if not st.session_state.ext_file_bytes:
                 st.warning("Please upload an image first.")
             else:
-                # TODO: replace this with actual prediction from your model
+                # TODO: replace this with actual prediction from your math model
                 st.session_state.ext_pred = "ViT: (pending backend)"
 
         st.markdown(f'<div class="pill">{st.session_state.ext_pred}</div>', unsafe_allow_html=True)
