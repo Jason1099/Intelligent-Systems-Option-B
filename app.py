@@ -108,7 +108,7 @@ with tabs[1]:
         st.caption("Drag & drop equation images or click to upload.")
 
         up_ext = st.file_uploader(
-            "  ", type=["png", "jpg", "jpeg", "bmp", "gif"],
+            "  ", type=["png", "jpg", "jpeg"],
             key="ext_uploader", label_visibility="collapsed"
         )
         if up_ext is not None:
