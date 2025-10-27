@@ -61,7 +61,7 @@ with tabs[0]:
         st.caption("Drag & drop digit images or click to upload.")
 
         up = st.file_uploader(
-            " ", type=["pdf", "png", "jpg", "jpeg"],
+            " ", type=["png", "jpg", "jpeg"],
             key="main_uploader", label_visibility="collapsed"
         )
         if up is not None:
