@@ -1,6 +1,6 @@
 import os, cv2, json, numpy as np
-from preprocess import image_preprocessor
-from segmentation import image_segmentation
+from Models.helpers.preprocess import image_preprocessor
+from Models.helpers.segmentation import image_segmentation
 from Models.CNN_Extension import CNN_Extension
 from tensorflow.keras import layers, models, callbacks
 from dataset_builder import build_single_symbol_datasets
