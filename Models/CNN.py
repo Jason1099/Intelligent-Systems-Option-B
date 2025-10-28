@@ -7,17 +7,15 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.layers import Input
 from keras.models import Sequential
-from keras.utils import image_dataset_from_directory as load_image_dir
-import math
 from keras import callbacks
 import pandas as pd
 import os
-from helpers.segmentation import image_segmentation 
-from helpers.preprocess import image_preprocessor
+from Models.helpers.segmentation import image_segmentation 
+from Models.helpers.preprocess import image_preprocessor
 import cv2
-import shutil
 import json
 
+INV_LABELS = {i: str(i) for i in range(10)}
 
 class CNN: 
     def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = (28, 28, 1), image_path = './digits'):
@@ -178,6 +176,9 @@ class CNN:
         # Return both for compatibility
         return ordered_results, final_numbers
     
+    def load_cnn(self): 
+        return self.model
 
-cnn = CNN(save_path = './Models/SavedModels/CNN.keras')
-cnn.predict_image(image_path = './Input_Images/image.png')
+
+# cnn = CNN(save_path = './Models/SavedModels/CNN.keras')
+# cnn.predict_image(image_path = './Input_Images/image.png')

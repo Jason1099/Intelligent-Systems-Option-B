@@ -3,6 +3,19 @@ import keras
 from keras import layers
 import math
 import numpy as np
+from os import listdir
+from os.path import isfile, join
+import cv2
+import pandas as pd
+import sklearn
+import sklearn.model_selection
+
+_raw_label = {
+    0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',
+    10:'dot',11:'minus',12:'plus',13:'w',14:'x',15:'y',16:'z',17:'slash',18:'equals'
+}
+_fix = {"dot":"*"}
+INV_LABELS = {k: _fix.get(v, v) for k, v in _raw_label.items()}
 
 class vt_model(layers.Layer):
 
@@ -198,3 +211,107 @@ def create_vit_classifier(
 
     model = keras.Model(inputs=inputs, outputs=logits, name='vit_mnist')
     return model
+
+        
+def prepare_mnist_data():
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+    x_train = x_train[..., np.newaxis].astype("float32")
+    x_test = x_test[..., np.newaxis].astype("float32")
+    
+    print(f"Training data shape: {x_train.shape}")
+    print(f"Test data shape: {x_test.shape}")
+    return (x_train, y_train), (x_test, y_test)
+
+
+def dataset_load(dataset_path: str, label_map: dict[str, int]):
+    files = [f for f in listdir(dataset_path) if isfile(join(dataset_path, f))]
+    def label_for(fname):
+        name = fname[:fname.index('-')]
+        return label_map[name]
+
+    X = []
+    y_idx = []
+    for f in files:
+        img = cv2.imread(join(dataset_path, f), cv2.IMREAD_GRAYSCALE)
+        img = 255 - img
+        img = img.astype("float32") / 255.0
+        img = img.reshape(28, 28, 1)
+        X.append(img)
+        y_idx.append(label_for(f))
+
+    X = np.array(X, dtype="float32")
+    num_classes = len(label_map)
+    y = keras.utils.to_categorical(y_idx, num_classes)
+
+    return sklearn.model_selection.train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+def train_model(dataset_path: str,
+              label_map: dict[str, int],
+              input_shape=(28,28,1),
+              epochs=150,
+              batch_size=128,
+              vanilla=False):
+    
+    (x_train, y_train), (x_test, y_test) = dataset_load(dataset_path, label_map)
+    model = create_vit_classifier(input_shape=input_shape, num_classes=len(label_map), vanilla=vanilla)
+
+    model.compile(
+        optimizer=keras.optimizers.Adam(),
+        loss=keras.losses.CategoricalCrossentropy(from_logits=True),
+        metrics=[keras.metrics.CategoricalAccuracy(name='accuracy')]
+    )
+
+    model.summary()
+
+    lr_schedule = keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss', 
+        factor=0.5, 
+        patience=5, 
+        min_lr=1e-6,
+        verbose=1
+    )
+        
+    early_stop = keras.callbacks.EarlyStopping(
+        monitor='val_loss', 
+        patience=15, 
+        restore_best_weights=True,
+        verbose=1
+    )
+
+    history = model.fit(
+        x_train, y_train,
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_split=0.1,
+        callbacks=[lr_schedule, early_stop],
+        verbose=1
+    )
+        
+    hist_df = pd.DataFrame(history.history) 
+
+    with open('./Models/History/vt_ext_2', mode='w') as f:
+        hist_df.to_csv(f)
+
+    test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
+    print(f"\nTest accuracy: {test_acc*100:.2f}%")
+    return model, history, (x_test, y_test)
+
+
+def save_model(model, path='./Models/SavedModels/vit_mnist_model.keras'):
+    if model:
+        if not path.endswith('.keras'):
+            path = path + '.keras'
+        model.save(path)
+        print(f"Model saved to {path}")
+
+
+def load_vt(path='./Models/SavedModels/vit_mnist_model.keras'):
+    if not path.endswith('.keras'):
+        path = path + '.keras'
+    
+    return keras.models.load_model(path, custom_objects={
+            'vt_model': vt_model,
+            'PatchEncoder': PatchEncoder,
+            'QueryScaler': QueryScaler
+        })

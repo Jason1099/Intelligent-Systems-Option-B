@@ -10,17 +10,21 @@ from keras.layers import MaxPooling2D
 from keras.layers import Input
 from keras.models import Sequential
 from keras.utils import image_dataset_from_directory as load_image_dir
-from tensorflow.keras.datasets import mnist
 from tensorflow.keras import layers, models
 from keras import callbacks
 import pandas as pd
 import os
 from os import listdir
 from os.path import isfile, join
-
 import sklearn.model_selection
-
 import cv2
+
+_raw_label = {
+    0:'0',1:'1',2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',
+    10:'dot',11:'minus',12:'plus',13:'w',14:'x',15:'y',16:'z',17:'slash',18:'equals'
+}
+_fix = {"dot":"*"}
+INV_LABELS = {k: _fix.get(v, v) for k, v in _raw_label.items()}
 
 class CNN_Extension: 
     def __init__(self, save_path = './Models/SavedModels/CNN.keras', input_shape = (), image_path = './digits', history_path = './Models/History/history_CNN_Ext.csv', dataset_path = './symbols'):
@@ -28,9 +32,19 @@ class CNN_Extension:
         self.savePath = save_path
         self.imagePath = image_path
         self.historyPath = history_path
-        self.labels = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'dot': 10, 'minus': 11, 'plus': 12, 'w': 13, 'x': 14, 'y': 15, 'z': 16, 'slash': 17, 'equals': 18}
-
-
+        self.labels = {
+            '0': 0, '1': 1, 
+            '2': 2, '3': 3, 
+            '4': 4, '5': 5, 
+            '6': 6, '7': 7, 
+            '8': 8, '9': 9, 
+            'dot': 10, 'minus': 11, 
+            'plus': 12, 'w': 13, 
+            'x': 14, 'y': 15, 
+            'z': 16, 'slash': 17, 
+            'equals': 18
+        }
+    
         self.y_train = None
         self.x_train = None
         self.x_test = None
@@ -142,7 +156,7 @@ class CNN_Extension:
         return model
         
     
-    def predict(self):
+    def predict_image(self):
 
         dataset = load_image_dir(self.imagePath, labels = None, color_mode = "grayscale", image_size = (28,28), shuffle = False)
         dataset = dataset.map(lambda x: x / 255.0)
@@ -151,7 +165,8 @@ class CNN_Extension:
         for x in predictions:
             print(inv_labels[np.argmax(x)])
 
-    
+    def load_cnn_ext(self):
+        return self.model
 
 # cnn = CNN_Extension(save_path = './Models/SavedModels/CNN_Ext_1.keras', history_path = './Models/History/history_CNN_Ext_1.csv')
 # cnn.predict()

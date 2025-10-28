@@ -83,7 +83,7 @@ class image_segmentation:
         bboxes = self._filter_components(stats, num_labels, gray.shape)
         self.last_filtered_boxes = bboxes[:]  # keep for debugging
 
-        # --- Step 6: group boxes into lines, then left→right order within each line ---
+        # --- Step 6: group boxes into lines, then left to right order within each line ---
         lines_only = self._group_lines_only(bboxes)
         ordered_bboxes = [b for line in lines_only for b in line]  # flatten lines in reading order
 
@@ -95,6 +95,14 @@ class image_segmentation:
 
         # --- Step 8: crop each bounding box to save as training image ---
         crops = self._extract_crops(bw, ordered_bboxes)
+
+        # --- Step 9: map ordered crops back to component IDs ---
+        atom_id_of = {id(b): i for i, b in enumerate(bboxes)}
+        for crop_index, b in enumerate(ordered_bboxes):
+            cid = atom_id_of.get(id(b))
+            if cid is not None and cid < len(self.group_manifest["components"]):
+                self.group_manifest["components"][cid]["crop_index"] = crop_index
+
         return ordered_bboxes, crops, self.group_manifest
 
 

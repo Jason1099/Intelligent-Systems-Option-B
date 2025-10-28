@@ -1,85 +1,112 @@
 {
   "image_path": "./Input_Images/image.png",
+  "expression": "60234567",
+  "expression_eval": "60234567",
+  "result": 60234567,
   "results": [
     {
       "digit": "6",
+      "confidence": 0.23196929693222046,
       "bbox": [
         25,
         22,
         41,
         64
       ],
-      "position": 0
+      "position": 0,
+      "component_id": 0,
+      "crop_index": 0
     },
     {
       "digit": "0",
+      "confidence": 0.23196929693222046,
       "bbox": [
         69,
         37,
         51,
         49
       ],
-      "position": 1
+      "position": 1,
+      "component_id": 1,
+      "crop_index": 1
     },
     {
       "digit": "2",
+      "confidence": 0.23196929693222046,
       "bbox": [
         34,
         114,
         49,
         49
       ],
-      "position": 2
+      "position": 2,
+      "component_id": 3,
+      "crop_index": 2
     },
     {
       "digit": "3",
+      "confidence": 0.22589750587940216,
       "bbox": [
         87,
         105,
         52,
         64
       ],
-      "position": 3
+      "position": 3,
+      "component_id": 2,
+      "crop_index": 3
     },
     {
       "digit": "4",
+      "confidence": 0.23196929693222046,
       "bbox": [
         40,
         198,
         41,
         60
       ],
-      "position": 4
+      "position": 4,
+      "component_id": 4,
+      "crop_index": 4
     },
     {
       "digit": "5",
+      "confidence": 0.23183797299861908,
       "bbox": [
         85,
         201,
         49,
         48
       ],
-      "position": 5
+      "position": 5,
+      "component_id": 5,
+      "crop_index": 5
     },
     {
       "digit": "6",
+      "confidence": 0.2319468855857849,
       "bbox": [
         136,
         200,
         26,
         51
       ],
-      "position": 6
+      "position": 6,
+      "component_id": 6,
+      "crop_index": 6
     },
     {
       "digit": "7",
+      "confidence": 0.23196929693222046,
       "bbox": [
         171,
         201,
         67,
         59
       ],
-      "position": 7
+      "position": 7,
+      "component_id": 7,
+      "crop_index": 7
     }
   ]
 }
