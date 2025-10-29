@@ -28,7 +28,7 @@ def _load_model(kind: str, model_path: str | None):
     if k in ("vit", "vt", "transformer"):
         from Models.vt_model import load_vt
         from Models.vt_model import INV_LABELS as _INV
-        model_path = model_path or "./Models/SavedModels/vit_ext.keras"
+        model_path = model_path or "./Models/SavedModels/vit_ext_2.keras"
         return load_vt(model_path), _INV
 
     raise ValueError(f"Unknown model kind: {kind}")
@@ -48,7 +48,7 @@ def _evaluate(expr: str):
         return None
 
 
-def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digits_export"):
+def _pipeline(image_path: str, model, kind: str, inv_labels: dict[int, str], out_dir="digits_export"):
         if model is None:
             raise ValueError("Model not loaded")
 
@@ -64,22 +64,32 @@ def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digit
                 json.dump(payload, f, indent=2)
             return payload
 
-        ishape = getattr(model, "input_shape", None)
-        if ishape and len(ishape) >= 4:
-            H, W = int(ishape[1]), int(ishape[2])
-        else:
-            H = W = 28
-
+        do_div255 = False
+        if kind in ("cnn", "basic", "digits", "cnn_ext", "extension", "symbols"):
+            do_div255 = True
+            
         processed_crops = []
         for crop in crops:
-            if crop.ndim == 3:
-                crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-            crop = cv2.resize(crop, (W, H))
-            crop = crop.astype('float32') / 255
+            # if crop.ndim == 3:
+            #     crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            # crop = cv2.resize(crop, (W, H))
+            crop = crop.astype('float32')
+            if do_div255:
+                crop /= 255
             crop = crop[..., np.newaxis]
             processed_crops.append(crop)
 
         X = np.stack(processed_crops, axis=0)
+
+        debug_dir = os.path.join(out_dir, "model_input_preview")
+        os.makedirs(debug_dir, exist_ok=True)
+
+        for i, x in enumerate(X):
+            # undo the normalization for viewing
+            vis = (x[..., 0] * 255).astype("uint8")
+            cv2.imwrite(os.path.join(debug_dir, f"input_{i:03}.png"), vis)
+        print(f"[DEBUG] Saved {len(X)} preprocessed crops to {debug_dir}")
+
         preds = model.predict(X, verbose=0)
         probs = tf.nn.softmax(preds).numpy()
         cls_idx = np.argmax(probs, axis=1)
@@ -132,4 +142,4 @@ def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digit
 def run(image_path: str, kind: str = "cnn", model_path: str | None = None, out_dir: str = "digits_export"):
     model, inv_label = _load_model(kind, model_path)
     # print("Loaded: ", type(model) )
-    return _pipeline(image_path, model, inv_label, out_dir)
+    return _pipeline(image_path, model, kind, inv_label, out_dir)

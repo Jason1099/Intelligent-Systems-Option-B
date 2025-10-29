@@ -8,7 +8,7 @@ class image_segmentation:
                 max_ar=4.0,
                 crop_size=28,
                 margin=5,
-                center=True,
+                center=False,
                 # --- group & line params ---
                 line_v_overlap=0.50,       # vertical overlap threshold to consider same line
                 line_y_tol_ratio=0.35,     # y-distance tolerance when aligning text baselines
@@ -17,7 +17,7 @@ class image_segmentation:
                 # --- thin/tall character handling ---
                 keep_tall_thin=True,       # keep tall, skinny components like '1' or '/'
                 thin_min_height_ratio=0.35,# minimum height ratio to keep tall-thin boxes
-                thicken_ones=True          # dilate vertically to connect thin strokes (fixes '1')
+                thicken_ones=False          # dilate vertically to connect thin strokes (fixes '1')
                 ):
         """
         Initialize default parameters and metadata placeholders

@@ -1,17 +1,17 @@
 {
   "image_path": "./Input_Images/image.png",
-  "expression": "60234567",
-  "expression_eval": "60234567",
-  "result": 60234567,
+  "expression": "60294567",
+  "expression_eval": "60294567",
+  "result": 60294567,
   "results": [
     {
       "digit": "6",
-      "confidence": 0.23196929693222046,
+      "confidence": 0.1312006115913391,
       "bbox": [
         25,
-        22,
+        23,
         41,
-        64
+        62
       ],
       "position": 0,
       "component_id": 0,
@@ -19,12 +19,12 @@
     },
     {
       "digit": "0",
-      "confidence": 0.23196929693222046,
+      "confidence": 0.1311996877193451,
       "bbox": [
         69,
-        37,
+        38,
         51,
-        49
+        47
       ],
       "position": 1,
       "component_id": 1,
@@ -32,25 +32,25 @@
     },
     {
       "digit": "2",
-      "confidence": 0.23196929693222046,
+      "confidence": 0.12443548440933228,
       "bbox": [
         34,
-        114,
+        115,
         49,
-        49
+        47
       ],
       "position": 2,
       "component_id": 3,
       "crop_index": 2
     },
     {
-      "digit": "3",
-      "confidence": 0.22589750587940216,
+      "digit": "9",
+      "confidence": 0.07690810412168503,
       "bbox": [
         87,
-        105,
+        106,
         52,
-        64
+        62
       ],
       "position": 3,
       "component_id": 2,
@@ -58,12 +58,12 @@
     },
     {
       "digit": "4",
-      "confidence": 0.23196929693222046,
+      "confidence": 0.13084572553634644,
       "bbox": [
         40,
-        198,
+        199,
         41,
-        60
+        58
       ],
       "position": 4,
       "component_id": 4,
@@ -71,38 +71,38 @@
     },
     {
       "digit": "5",
-      "confidence": 0.23183797299861908,
+      "confidence": 0.13114170730113983,
       "bbox": [
         85,
-        201,
+        202,
         49,
-        48
+        46
       ],
       "position": 5,
-      "component_id": 5,
+      "component_id": 6,
       "crop_index": 5
     },
     {
       "digit": "6",
-      "confidence": 0.2319468855857849,
+      "confidence": 0.12974447011947632,
       "bbox": [
         136,
-        200,
+        201,
         26,
-        51
+        49
       ],
       "position": 6,
-      "component_id": 6,
+      "component_id": 5,
       "crop_index": 6
     },
     {
       "digit": "7",
-      "confidence": 0.23196929693222046,
+      "confidence": 0.11167007684707642,
       "bbox": [
         171,
-        201,
+        202,
         67,
-        59
+        57
       ],
       "position": 7,
       "component_id": 7,

@@ -3,8 +3,8 @@ from Models.digit_recognition_system import run
 
 if __name__ == "__main__":
     # Choose which model to use: "cnn", "cnn_ext", or "vit"
-    model_kind = "cnn"
-    # model_kind = "cnn_ext"
+    # model_kind = "cnn"
+    model_kind = "cnn_ext"
     # model_kind = "vit"
 
     dir = "./Input_Images/"
