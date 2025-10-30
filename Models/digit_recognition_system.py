@@ -6,6 +6,7 @@ from Models.helpers.segmentation import image_segmentation
 import cv2
 import ast
 import operator as op
+from collections import defaultdict
 
 
 def _load_model(kind: str, model_path: str | None):
@@ -100,37 +101,51 @@ def _pipeline(image_path: str, model, kind: str, inv_labels: dict[int, str], out
         ro = manifest.get("reading_order", [c["component_id"] for c in manifest.get("components", [])])
         components = manifest.get("components", [])
 
-        ordered_results = []
+        ordered_digits = []
         for pos, cid in enumerate(ro):
             comp = components[cid]
             j = comp.get("crop_index", cid)  
             k    = int(cls_idx[j])
             conf = float(confs[j])
             bbox = tuple(map(int, comp["bbox"][:4]))
+            line_index = int(comp.get("line_idx", 0))
 
-            ordered_results.append({
+            ordered_digits.append({
                 "digit": str(inv_labels.get(k, k)),
                 "confidence": conf,
                 "bbox": bbox,
                 "position": pos,
                 "component_id": int(cid),
                 "crop_index": int(j),
+                "line_index": line_index,
             })
 
-        expression = "".join(r["digit"] for r in ordered_results)
-        eval_map = {"x": "*", "plus": "+", "minus": "-", "slash": "/", "equals": "="}
-        eval_expr = "".join(eval_map.get(r["digit"], r["digit"]) for r in ordered_results)
-
+        expression = "".join(r["digit"] for r in ordered_digits)
+        eval_map = {"x": "*", "plus": "+", "minus": "-", "slash": "/"}
         allowed = set("0123456789+-*/()")
-        can_eval = all(ch in allowed for ch in eval_expr)
-        result = _evaluate(eval_expr) if can_eval and eval_expr else None
-        
+
+        lines_exprs = {}
+        for r in ordered_digits:
+            line = int(r.get("line_index", 0))
+            map_eval = eval_map.get(r["digit"], r["digit"])
+            lines_exprs[line] = lines_exprs.get(line, "") + map_eval
+
+        line_expression = []
+        for line in sorted(lines_exprs):
+            expr = lines_exprs[line]
+            can_eval = all(ch in allowed for ch in expr)
+            result = _evaluate(expr) if can_eval else None
+            line_expression.append({
+                "line_index": line,
+                "expression": expr,
+                "result": result,
+            })
+
+
         payload = {
             "image_path": image_path,
-            "expression": expression,
-            "expression_eval": eval_expr,
-            "result": result,
-            "results": ordered_results
+            "line_results": line_expression,
+            "digit_results": ordered_digits
         }
 
         with open(os.path.join(out_dir, "results.json"), "w", encoding="utf-8") as f:

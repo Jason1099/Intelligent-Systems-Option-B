@@ -49,7 +49,7 @@ class CNN_Extension:
         self.x_train = None
         self.x_test = None
         self.y_test = None
-        self.dataset_load()
+        # self.dataset_load()
         if os.path.exists(self.savePath):
             self.model = load_model(self.savePath)
         else:

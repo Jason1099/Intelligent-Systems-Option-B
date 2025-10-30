@@ -1,9 +1,23 @@
 {
   "image_path": "./Input_Images/image.png",
-  "expression": "60294567",
-  "expression_eval": "60294567",
-  "result": 60294567,
-  "results": [
+  "line_results": [
+    {
+      "line_index": 0,
+      "expression": "60",
+      "result": 60
+    },
+    {
+      "line_index": 1,
+      "expression": "29",
+      "result": 29
+    },
+    {
+      "line_index": 2,
+      "expression": "4567",
+      "result": 4567
+    }
+  ],
+  "digit_results": [
     {
       "digit": "6",
       "confidence": 0.1312006115913391,
@@ -15,7 +29,8 @@
       ],
       "position": 0,
       "component_id": 0,
-      "crop_index": 0
+      "crop_index": 0,
+      "line_index": 0
     },
     {
       "digit": "0",
@@ -28,7 +43,8 @@
       ],
       "position": 1,
       "component_id": 1,
-      "crop_index": 1
+      "crop_index": 1,
+      "line_index": 0
     },
     {
       "digit": "2",
@@ -41,7 +57,8 @@
       ],
       "position": 2,
       "component_id": 3,
-      "crop_index": 2
+      "crop_index": 2,
+      "line_index": 1
     },
     {
       "digit": "9",
@@ -54,7 +71,8 @@
       ],
       "position": 3,
       "component_id": 2,
-      "crop_index": 3
+      "crop_index": 3,
+      "line_index": 1
     },
     {
       "digit": "4",
@@ -67,7 +85,8 @@
       ],
       "position": 4,
       "component_id": 4,
-      "crop_index": 4
+      "crop_index": 4,
+      "line_index": 2
     },
     {
       "digit": "5",
@@ -80,7 +99,8 @@
       ],
       "position": 5,
       "component_id": 6,
-      "crop_index": 5
+      "crop_index": 5,
+      "line_index": 2
     },
     {
       "digit": "6",
@@ -93,7 +113,8 @@
       ],
       "position": 6,
       "component_id": 5,
-      "crop_index": 6
+      "crop_index": 6,
+      "line_index": 2
     },
     {
       "digit": "7",
@@ -106,7 +127,8 @@
       ],
       "position": 7,
       "component_id": 7,
-      "crop_index": 7
+      "crop_index": 7,
+      "line_index": 2
     }
   ]
 }
