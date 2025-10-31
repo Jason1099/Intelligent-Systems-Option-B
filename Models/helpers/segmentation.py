@@ -17,11 +17,7 @@ class image_segmentation:
                 # --- thin/tall character handling ---
                 keep_tall_thin=True,       # keep tall, skinny components like '1' or '/'
                 thin_min_height_ratio=0.35,# minimum height ratio to keep tall-thin boxes
-<<<<<<< HEAD
-                thicken_ones= False       # dilate vertically to connect thin strokes (fixes '1')
-=======
                 thicken_ones=False          # dilate vertically to connect thin strokes (fixes '1')
->>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
                 ):
         """
         Initialize default parameters and metadata placeholders

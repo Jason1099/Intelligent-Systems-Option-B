@@ -1,3 +1,4 @@
 IS/
 symbols/
 *.whl
+*.pyc
