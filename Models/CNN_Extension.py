@@ -49,7 +49,7 @@ class CNN_Extension:
         self.x_train = None
         self.x_test = None
         self.y_test = None
-        self.dataset_load()
+        # self.dataset_load()
         if os.path.exists(self.savePath):
             self.model = load_model(self.savePath)
         else:
@@ -139,21 +139,7 @@ class CNN_Extension:
 
         model.save(self.savePath)
         return model
-    
-    def tiny_cnn(num_classes: int):
-        inp = layers.Input(shape=(28, 28, 1), name="input_28x28x1")
 
-        x = layers.Conv2D(32, 3, padding="same", activation="relu", name="backbone_conv1")(inp)
-        x = layers.MaxPool2D(pool_size=2, name="backbone_pool1")(x)          
-        x = layers.Conv2D(64, 3, padding="same", activation="relu", name="backbone_conv2")(x)
-        x = layers.MaxPool2D(pool_size=2, name="backbone_pool2")(x)         
-        x = layers.Conv2D(128, 3, padding="same", activation="relu", name="backbone_conv3")(x)
-        x = layers.GlobalAveragePooling2D(name="backbone_gap")(x)
-        x = layers.Dropout(0.25, name="head_dropout")(x)
-        out = layers.Dense(num_classes, activation="softmax", name="head_logits")(x)
-
-        model = models.Model(inp, out, name="TinyCNN")
-        return model
         
     
     def predict_image(self):

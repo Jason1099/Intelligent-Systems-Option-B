@@ -28,7 +28,7 @@ def _load_model(kind: str, model_path: str | None):
     if k in ("vit", "vt", "transformer"):
         from Models.vt_model import load_vt
         from Models.vt_model import INV_LABELS as _INV
-        model_path = model_path or "./Models/SavedModels/vit_ext.keras"
+        model_path = model_path or "./Models/SavedModels/vit_ext_2.keras"
         return load_vt(model_path), _INV
 
     raise ValueError(f"Unknown model kind: {kind}")
@@ -55,7 +55,7 @@ def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digit
         os.makedirs(out_dir, exist_ok=True)
 
         pre = image_preprocessor(image_path=image_path, binarize=False).preprocess()
-        seg = image_segmentation()
+        seg = image_segmentation(center=False, thicken_ones=False)
 
         bboxes, crops, manifest = seg.segmentation(pre)
         if not crops:
@@ -74,18 +74,20 @@ def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digit
         for crop in crops:
             if crop.ndim == 3:
                 crop = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-            crop = cv2.resize(crop, (W, H))
+            
+            
             crop = crop.astype('float32') / 255
+    
             crop = crop[..., np.newaxis]
             processed_crops.append(crop)
 
-        X = np.stack(processed_crops, axis=0)
+        X = np.array(processed_crops)
         preds = model.predict(X, verbose=0)
         probs = tf.nn.softmax(preds).numpy()
-        cls_idx = np.argmax(probs, axis=1)
+        cls_idx = np.argmax(preds, axis=1)
         confs = probs[np.arange(len(probs)), cls_idx]
 
-        labels = [str(inv_labels.get(int(k), str(k))) for k in cls_idx]
+        # labels = [str(inv_labels.get(int(k), str(k))) for k in cls_idx]
      
         ro = manifest.get("reading_order", [c["component_id"] for c in manifest.get("components", [])])
         components = manifest.get("components", [])
@@ -99,7 +101,7 @@ def _pipeline(image_path: str, model, inv_labels: dict[int, str], out_dir="digit
             bbox = tuple(map(int, comp["bbox"][:4]))
 
             ordered_results.append({
-                "digit": str(inv_labels.get(k, k)),
+                "digit": str(inv_labels[k]),
                 "confidence": conf,
                 "bbox": bbox,
                 "position": pos,
