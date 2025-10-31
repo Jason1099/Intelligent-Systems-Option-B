@@ -7,10 +7,17 @@
     {
       "component_id": 0,
       "bbox": [
+<<<<<<< HEAD
         17,
         10,
         58,
         71
+=======
+        25,
+        23,
+        41,
+        62
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 0,
       "pos_in_line": 0,
@@ -22,10 +29,17 @@
     {
       "component_id": 1,
       "bbox": [
+<<<<<<< HEAD
         93,
         12,
         44,
         67
+=======
+        69,
+        38,
+        51,
+        47
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 0,
       "pos_in_line": 1,
@@ -37,10 +51,17 @@
     {
       "component_id": 2,
       "bbox": [
+<<<<<<< HEAD
         316,
         13,
         35,
         63
+=======
+        87,
+        106,
+        52,
+        62
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 0,
       "pos_in_line": 4,
@@ -52,10 +73,17 @@
     {
       "component_id": 3,
       "bbox": [
+<<<<<<< HEAD
         256,
         22,
         40,
         54
+=======
+        34,
+        115,
+        49,
+        47
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 0,
       "pos_in_line": 3,
@@ -67,10 +95,17 @@
     {
       "component_id": 4,
       "bbox": [
+<<<<<<< HEAD
         179,
         24,
         41,
         55
+=======
+        40,
+        199,
+        41,
+        58
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 0,
       "pos_in_line": 2,
@@ -82,6 +117,7 @@
     {
       "component_id": 5,
       "bbox": [
+<<<<<<< HEAD
         238,
         129,
         51,
@@ -106,16 +142,49 @@
       "pos_in_line": 0,
       "group_id": null,
       "pos_in_group": null,
+=======
+        136,
+        201,
+        26,
+        49
+      ],
+      "line_idx": 2,
+      "pos_in_line": 2,
+      "group_id": 2,
+      "pos_in_group": 2,
+      "order_index": 6,
+      "crop_path": "digits_export/objects/comp_0005.png"
+    },
+    {
+      "component_id": 6,
+      "bbox": [
+        85,
+        202,
+        49,
+        46
+      ],
+      "line_idx": 2,
+      "pos_in_line": 1,
+      "group_id": 2,
+      "pos_in_group": 1,
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       "order_index": 5,
       "crop_path": "digits_export/objects/comp_0006.png"
     },
     {
       "component_id": 7,
       "bbox": [
+<<<<<<< HEAD
         92,
         140,
         44,
         45
+=======
+        171,
+        202,
+        67,
+        57
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
       ],
       "line_idx": 1,
       "pos_in_line": 1,
@@ -125,6 +194,7 @@
       "crop_path": "digits_export/objects/comp_0007.png"
     },
     {
+<<<<<<< HEAD
       "component_id": 8,
       "bbox": [
         165,
@@ -138,6 +208,16 @@
       "pos_in_group": null,
       "order_index": 7,
       "crop_path": "digits_export/objects/comp_0008.png"
+=======
+      "group_id": 2,
+      "line_idx": 2,
+      "members": [
+        4,
+        6,
+        5,
+        7
+      ]
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
     }
   ],
   "groups": [],
@@ -147,9 +227,16 @@
     4,
     3,
     2,
+<<<<<<< HEAD
     6,
     7,
     8,
     5
+=======
+    4,
+    6,
+    5,
+    7
+>>>>>>> ea3f365e487e0b2a29e7d3439e36603676333eb0
   ]
 }
