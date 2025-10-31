@@ -26,10 +26,16 @@ def _load_model(kind: str, model_path: str | None):
         cnn_ext = CNN_EXT(model_path)
         return cnn_ext.load_cnn_ext(), _INV
 
-    if k in ("vit", "vt", "transformer"):
+    if k == "vit_ext":
         from Models.vt_model import load_vt
         from Models.vt_model import INV_LABELS as _INV
         model_path = model_path or "./Models/SavedModels/vit_ext_2.keras"
+        return load_vt(model_path), _INV
+    
+    if k == "vit":
+        from Models.vt_model import load_vt
+        from Models.vt_model import INV_LABELS as _INV
+        model_path = model_path or "./Models/SavedModels/vit_mnist_model.keras"
         return load_vt(model_path), _INV
 
     raise ValueError(f"Unknown model kind: {kind}")
