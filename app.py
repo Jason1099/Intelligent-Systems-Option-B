@@ -1,16 +1,12 @@
 from io import BytesIO
 from PIL import Image
-import os
+import base64
+import mimetypes
 import tempfile
 import numpy as np
 import streamlit as st
-
 import os
 import tempfile
-from io import BytesIO
-from PIL import Image
-import numpy as np
-import streamlit as st
 # --- Import the core logic from main.py ---
 from Models.digit_recognition_system import run 
 # ... (rest of imports and setup) ...
@@ -142,7 +138,7 @@ def clear_ext_state():
 init_state()
 
 st.markdown("### Intelligent Systems – Project B (Group 5)")
-tabs = st.tabs(["Main (HNRS)", "Extension (Math)", "About"])
+tabs = st.tabs(["Main (HNRS)", "Extension (Math)", "About Us"])
 
 # ------------------- MAIN TAB (HNRS) -------------------
 with tabs[0]:
@@ -279,5 +275,109 @@ with tabs[1]:
 
 # ------------------- ABOUT TAB -------------------
 with tabs[2]:
-    st.markdown("## About")
-    st.write("Work in progress. Coming soon.")
+    st.markdown("## About Us")
+
+    # --- Custom styling for cards ---
+    st.markdown("""
+    <style>
+    .member-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid #2b2f36;
+        border-radius: 14px;
+        padding: 22px 18px;
+        text-align: center;
+        margin-bottom: 22px;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset;
+    }
+    .member-img {
+        width: 110px; height: 110px;
+        border-radius: 9999px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 14px auto;
+        border: 2px solid #3b3f47;
+        background: #111;
+    }
+    .member-name {
+        font-weight: 800;
+        letter-spacing: .2px;
+        color: #e5e7eb;
+    }
+    .member-sub {
+        color: #cbd5e1;
+        font-weight: 700;
+        margin-top: 6px;
+        line-height: 1.3;
+    }
+    .about-wrap {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # --- Team info ---
+    TEAM = [
+        {"name": "Jason Tjahjono", "id": "10000000", "major": "Computer Science", "img": None},
+        {"name": "Sovithyea Prach", "id": "105270743", "major": "Artificial Intelligence", "img": "src/vith.png"},
+        {"name": "Dominic Eagan", "id": "105075090", "major": "Computer Science", "img": "src/dom.png"},
+        {"name": "Theja Nadeeja Amarasiri", "id": "105015957", "major": "Computer Science", "img": "src/tj.png"},
+    ]
+
+    # Fallback avatar for missing images
+    FALLBACK_AVATAR = (
+        "data:image/png;base64,"
+        "iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAYAAABx9qjSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB"
+        "4UlEQVR4nO3csW3UQBiG4Xe4p8w3Jm0X0bA2i1lqR4w2z8g3yC1vVqK6k2b1y0lQpCw2y1w1B2o6V"
+        "Yy6t6bI7QxWf3l8yEx0B3yNw4f3JgQAAAAAAAAAAAB4kqv0d3m2H4Xo8eC1cZ3s6c9Y0g5m3xw9cV"
+        "4d3b0b2JY2b8vQmI2b8uQmI2b8uQmI2b8uQmGf2rXWmWvZbq1q3vWm9bq1m9bq1m9bq1m9bq1m9Z/"
+        "0nKcDgYf7zvEwqY0dX9b4l7W5mJmYniqkC2H4v2w8m7Yd0qf3r+f7wVdDkqk8qD8bEw1b2Qb5m0nI"
+        "Y5hZq4I9gX5kV9bWk0mJq4f1o0mIq4b1o0mIq4b1q5rQzv7A2wqf1Gk3m6p9sLg7Zr3mJ3r+zDZp9"
+        "mE7q8bC6bZg1k9o8q7xE3sH3i6GfvE7yYB1sPkQY2h+k7lKcO1o9QbqV8kC3y7b1e4+8b1M0b9w8M"
+        "2v7J2q83w2N+q9s3g2d+q9s3g2f+W3yK7Vw8f8n1jv0v1v0mZ8m3gO/8H3gO/8H3gO/8H3gO/8H3g"
+        "O77fQe8A2m3H4n8jvG2v7z4r2X2xwAAAAAAAAAAAAAAIDf0g2rj1pZcJ2AAAAAElFTkSuQmCC"
+    )
+
+    # Fallback avatar stays the same (use yours)
+    def avatar_src(path_or_url: str | None) -> str:
+        """
+        Safe <img src> generator:
+        - http(s)/data URIs pass through
+        - existing local files -> base64 data URI
+        - missing/None -> fallback silhouette
+        """
+        if not path_or_url:
+            return FALLBACK_AVATAR
+
+        if path_or_url.startswith(("http://", "https://", "data:")):
+            return path_or_url
+
+        if os.path.exists(path_or_url):
+            mime = mimetypes.guess_type(path_or_url)[0] or "image/png"
+            with open(path_or_url, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode("ascii")
+            return f"data:{mime};base64,{b64}"
+
+        return FALLBACK_AVATAR
+
+    st.markdown('<div class="about-wrap">', unsafe_allow_html=True)
+    st.markdown("### Our Team")
+    row1 = TEAM[:2]
+    row2 = TEAM[2:]
+
+    for row in [row1, row2]:
+        c1, c2 = st.columns(2, gap="large")
+        for col, member in zip([c1, c2], row):
+            with col:
+                st.markdown(
+                    f"""
+                    <div class="member-card">
+                        <img class="member-img" src="{avatar_src(member['img'])}" alt="avatar">
+                        <div class="member-name">{member['name']}</div>
+                        <div class="member-sub">{member['id']} • {member['major']}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+    st.markdown("</div>", unsafe_allow_html=True)
