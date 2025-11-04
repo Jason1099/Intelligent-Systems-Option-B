@@ -318,7 +318,7 @@ with tabs[2]:
 
     # --- Team info ---
     TEAM = [
-        {"name": "Jason Tjahjono", "id": "10000000", "major": "Computer Science", "img": None},
+        {"name": "Jason Tjahjono", "id": "104656753", "major": "Computer Science", "img": "src/jason.png"},
         {"name": "Sovithyea Prach", "id": "105270743", "major": "Artificial Intelligence", "img": "src/vith.png"},
         {"name": "Dominic Eagan", "id": "105075090", "major": "Computer Science", "img": "src/dom.png"},
         {"name": "Theja Nadeeja Amarasiri", "id": "105015957", "major": "Computer Science", "img": "src/tj.png"},
